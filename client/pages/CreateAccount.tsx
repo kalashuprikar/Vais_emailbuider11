@@ -35,6 +35,9 @@ export default function CreateAccount() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [agreementModalOpen, setAgreementModalOpen] = useState(false);
+  const [agreementAcknowledged, setAgreementAcknowledged] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
