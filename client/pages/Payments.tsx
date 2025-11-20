@@ -385,21 +385,40 @@ function ModernPaymentCard({
                 </p>
                 {method.isDefault && (
                   <div className="mt-2">
-                    <div className="inline-flex items-center gap-2 bg-green-100 px-2.5 py-1 rounded-full border border-green-300">
-                      <span
-                        className="inline-flex items-center gap-1.5 text-green-700 font-semibold"
-                        style={{ fontSize: "11px" }}
-                      >
-                        <span className="inline-flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        Autopay
-                      </span>
+                    <div
+                      className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full border ${
+                        method.autopayEnabled
+                          ? "bg-green-100 border-green-300"
+                          : "bg-gray-100 border-gray-300"
+                      }`}
+                    >
                       <Switch
                         checked={method.autopayEnabled}
                         onCheckedChange={(checked) =>
                           onAutopayChange(method.id, checked)
                         }
-                        className="h-4 w-8"
+                        className="h-3.5 w-7 scale-75 origin-left"
                       />
+                      <span
+                        className={`inline-flex items-center gap-1.5 font-semibold ${
+                          method.autopayEnabled
+                            ? "text-green-700"
+                            : "text-gray-600"
+                        }`}
+                        style={{ fontSize: "11px" }}
+                      >
+                        {method.autopayEnabled ? (
+                          <>
+                            <span className="inline-flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            Autopay Enabled
+                          </>
+                        ) : (
+                          <>
+                            <span className="inline-flex h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                            Autopay Disabled
+                          </>
+                        )}
+                      </span>
                     </div>
                   </div>
                 )}
