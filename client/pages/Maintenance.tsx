@@ -1,24 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Wrench, Clock, Mail, AlertCircle } from "lucide-react";
+import React from "react";
+import { Wrench, Mail } from "lucide-react";
 
 export default function Maintenance() {
-  const [timeElapsed, setTimeElapsed] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeElapsed((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
 
   return (
     <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top_left,rgba(255,106,0,0.15),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(26,115,232,0.12),transparent_50%),radial-gradient(ellipse_at_top_right,rgba(0,196,140,0.12),transparent_40%)] overflow-hidden flex items-center justify-center relative bg-white">
