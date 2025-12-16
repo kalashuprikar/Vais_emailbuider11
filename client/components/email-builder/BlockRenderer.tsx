@@ -1,9 +1,17 @@
 import React from "react";
 import { ContentBlock } from "./types";
+import { TitleBlockComponent } from "./blocks/TitleBlockComponent";
 import { TextBlockComponent } from "./blocks/TextBlockComponent";
 import { ImageBlockComponent } from "./blocks/ImageBlockComponent";
+import { VideoBlockComponent } from "./blocks/VideoBlockComponent";
 import { ButtonBlockComponent } from "./blocks/ButtonBlockComponent";
+import { DynamicContentBlockComponent } from "./blocks/DynamicContentBlockComponent";
+import { LogoBlockComponent } from "./blocks/LogoBlockComponent";
+import { SocialBlockComponent } from "./blocks/SocialBlockComponent";
+import { HtmlBlockComponent } from "./blocks/HtmlBlockComponent";
 import { DividerBlockComponent } from "./blocks/DividerBlockComponent";
+import { ProductBlockComponent } from "./blocks/ProductBlockComponent";
+import { NavigationBlockComponent } from "./blocks/NavigationBlockComponent";
 import { HeaderBlockComponent } from "./blocks/HeaderBlockComponent";
 import { FooterBlockComponent } from "./blocks/FooterBlockComponent";
 import { SpacerBlockComponent } from "./blocks/SpacerBlockComponent";
