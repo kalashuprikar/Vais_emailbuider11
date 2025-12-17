@@ -17,12 +17,18 @@ export const TitleBlockComponent: React.FC<TitleBlockComponentProps> = ({
   onEdit,
   onContentChange,
 }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit();
+  };
+
   return (
     <div
-      className={`relative p-4 transition-all cursor-pointer ${
+      className={`relative p-4 transition-all cursor-pointer user-select-none ${
         isSelected ? "ring-2 ring-valasys-orange" : ""
       }`}
-      onClick={onEdit}
+      onClick={handleClick}
+      style={{ userSelect: "none" }}
     >
       {isEditing ? (
         <textarea
