@@ -251,6 +251,8 @@ export const EmailBuilder: React.FC<EmailBuilderProps> = ({
                     block={selectedBlock}
                     onBlockUpdate={handleUpdateBlock}
                     onBlockDelete={handleDeleteBlock}
+                    selectedFooterElement={selectedFooterElement}
+                    onFooterElementSelect={setSelectedFooterElement}
                   />
                 </div>
               </>

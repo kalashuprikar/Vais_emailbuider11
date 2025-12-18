@@ -11,12 +11,16 @@ interface SettingsPanelProps {
   block: ContentBlock | null;
   onBlockUpdate: (block: ContentBlock) => void;
   onBlockDelete: () => void;
+  selectedFooterElement?: string | null;
+  onFooterElementSelect?: (element: string | null) => void;
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   block,
   onBlockUpdate,
   onBlockDelete,
+  selectedFooterElement,
+  onFooterElementSelect,
 }) => {
   const [groupPaddingSides, setGroupPaddingSides] = useState(true);
   const [groupMarginSides, setGroupMarginSides] = useState(false);
@@ -2375,122 +2379,151 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
           </div>
         );
       case "footer-with-social":
-        return (
-          <div className="space-y-6 max-h-[600px] overflow-y-auto">
-            <div className="border-b pb-4">
-              <h4 className="text-sm font-bold text-gray-900 mb-3">
-                Social Media
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="socialSize" className="text-xs text-gray-700">
-                    Size
-                  </Label>
-                  <select
-                    id="socialSize"
-                    value={block.social.size}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        social: {
-                          ...block.social,
-                          size: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                  </select>
-                </div>
-                <div>
-                  <Label
-                    htmlFor="socialShape"
-                    className="text-xs text-gray-700"
-                  >
-                    Shape
-                  </Label>
-                  <select
-                    id="socialShape"
-                    value={block.social.shape}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        social: {
-                          ...block.social,
-                          shape: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="rounded">Rounded</option>
-                    <option value="circle">Circle</option>
-                    <option value="square">Square</option>
-                  </select>
-                </div>
-                <div>
-                  <Label
-                    htmlFor="socialTheme"
-                    className="text-xs text-gray-700"
-                  >
-                    Theme
-                  </Label>
-                  <select
-                    id="socialTheme"
-                    value={block.social.theme}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        social: {
-                          ...block.social,
-                          theme: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="colored">Colored</option>
-                    <option value="outlined">Outlined</option>
-                    <option value="solid">Solid</option>
-                  </select>
-                </div>
-                <div>
-                  <Label
-                    htmlFor="socialSpacing"
-                    className="text-xs text-gray-700"
-                  >
-                    Space between icons (px)
-                  </Label>
-                  <Input
-                    id="socialSpacing"
-                    type="number"
-                    min="0"
-                    value={block.social.spacing}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        social: {
-                          ...block.social,
-                          spacing: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-              </div>
+        if (!selectedFooterElement) {
+          return (
+            <div className="bg-white border-l border-gray-200 p-4 h-full flex items-center justify-center">
+              <p className="text-gray-500 text-sm text-center">
+                Click on a footer element to edit its styling
+              </p>
             </div>
+          );
+        }
 
-            <div className="border-b pb-4">
-              <h4 className="text-sm font-bold text-gray-900 mb-3">
-                Enterprise Name
-              </h4>
-              <div className="space-y-3">
+        return (
+          <div className="space-y-5">
+            {selectedFooterElement === "social" && (
+              <>
                 <div>
-                  <Label className="text-xs text-gray-700">Content</Label>
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Icon Design
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label
+                        htmlFor="socialSize"
+                        className="text-xs text-gray-700 mb-1 block"
+                      >
+                        Size
+                      </Label>
+                      <select
+                        id="socialSize"
+                        value={block.social.size}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            social: {
+                              ...block.social,
+                              size: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="socialShape"
+                        className="text-xs text-gray-700 mb-1 block"
+                      >
+                        Shape
+                      </Label>
+                      <select
+                        id="socialShape"
+                        value={block.social.shape}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            social: {
+                              ...block.social,
+                              shape: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="rounded">Rounded</option>
+                        <option value="circle">Circle</option>
+                        <option value="square">Square</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="socialTheme"
+                        className="text-xs text-gray-700 mb-1 block"
+                      >
+                        Theme
+                      </Label>
+                      <select
+                        id="socialTheme"
+                        value={block.social.theme}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            social: {
+                              ...block.social,
+                              theme: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="colored">Colored</option>
+                        <option value="outlined">Outlined</option>
+                        <option value="solid">Solid</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Layout
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label
+                        htmlFor="socialSpacing"
+                        className="text-xs text-gray-700 mb-1 block"
+                      >
+                        Space between icons
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="socialSpacing"
+                          type="number"
+                          min="0"
+                          value={block.social.spacing}
+                          onChange={(e) =>
+                            onBlockUpdate({
+                              ...block,
+                              social: {
+                                ...block.social,
+                                spacing: parseInt(e.target.value),
+                              },
+                            })
+                          }
+                          className="flex-1 focus:ring-valasys-orange focus:ring-2"
+                        />
+                        <span className="text-xs text-gray-600 self-center px-2">
+                          px
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {selectedFooterElement === "enterpriseName" && (
+              <>
+                <div>
+                  <Label className="text-xs font-semibold text-gray-700 mb-2 block">
+                    Content
+                  </Label>
                   <Input
                     type="text"
                     value={block.enterpriseName.content}
@@ -2506,105 +2539,122 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     className="focus:ring-valasys-orange focus:ring-2"
                   />
                 </div>
-                <div>
-                  <Label className="text-xs text-gray-700">
-                    Font Size (px)
-                  </Label>
-                  <Input
-                    type="number"
-                    value={block.enterpriseName.fontSize}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        enterpriseName: {
-                          ...block.enterpriseName,
-                          fontSize: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Weight</Label>
-                  <select
-                    value={block.enterpriseName.fontWeight}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        enterpriseName: {
-                          ...block.enterpriseName,
-                          fontWeight: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="bold">Bold</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Style</Label>
-                  <select
-                    value={block.enterpriseName.fontStyle}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        enterpriseName: {
-                          ...block.enterpriseName,
-                          fontStyle: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="italic">Italic</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Family</Label>
-                  <Input
-                    type="text"
-                    value={block.enterpriseName.fontFamily}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        enterpriseName: {
-                          ...block.enterpriseName,
-                          fontFamily: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="Arial, sans-serif"
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Color</Label>
-                  <Input
-                    type="color"
-                    value={block.enterpriseName.fontColor}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        enterpriseName: {
-                          ...block.enterpriseName,
-                          fontColor: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div className="border-b pb-4">
-              <h4 className="text-sm font-bold text-gray-900 mb-3">Address</h4>
-              <div className="space-y-3">
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Typography
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Size (px)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={block.enterpriseName.fontSize}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            enterpriseName: {
+                              ...block.enterpriseName,
+                              fontSize: parseInt(e.target.value),
+                            },
+                          })
+                        }
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Weight
+                      </Label>
+                      <select
+                        value={block.enterpriseName.fontWeight}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            enterpriseName: {
+                              ...block.enterpriseName,
+                              fontWeight: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="bold">Bold</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Style
+                      </Label>
+                      <select
+                        value={block.enterpriseName.fontStyle}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            enterpriseName: {
+                              ...block.enterpriseName,
+                              fontStyle: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Family
+                      </Label>
+                      <Input
+                        type="text"
+                        value={block.enterpriseName.fontFamily}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            enterpriseName: {
+                              ...block.enterpriseName,
+                              fontFamily: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Arial, sans-serif"
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Color
+                      </Label>
+                      <Input
+                        type="color"
+                        value={block.enterpriseName.fontColor}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            enterpriseName: {
+                              ...block.enterpriseName,
+                              fontColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {selectedFooterElement === "address" && (
+              <>
                 <div>
-                  <Label className="text-xs text-gray-700">Content</Label>
+                  <Label className="text-xs font-semibold text-gray-700 mb-2 block">
+                    Content
+                  </Label>
                   <textarea
                     value={block.address.content}
                     onChange={(e) =>
@@ -2613,111 +2663,126 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         address: { ...block.address, content: e.target.value },
                       })
                     }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-valasys-orange focus:ring-2"
-                    rows={2}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
+                    rows={3}
                   />
                 </div>
-                <div>
-                  <Label className="text-xs text-gray-700">
-                    Font Size (px)
-                  </Label>
-                  <Input
-                    type="number"
-                    value={block.address.fontSize}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        address: {
-                          ...block.address,
-                          fontSize: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Weight</Label>
-                  <select
-                    value={block.address.fontWeight}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        address: {
-                          ...block.address,
-                          fontWeight: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="bold">Bold</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Style</Label>
-                  <select
-                    value={block.address.fontStyle}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        address: {
-                          ...block.address,
-                          fontStyle: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="italic">Italic</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Family</Label>
-                  <Input
-                    type="text"
-                    value={block.address.fontFamily}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        address: {
-                          ...block.address,
-                          fontFamily: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="Arial, sans-serif"
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Color</Label>
-                  <Input
-                    type="color"
-                    value={block.address.fontColor}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        address: {
-                          ...block.address,
-                          fontColor: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div className="border-b pb-4">
-              <h4 className="text-sm font-bold text-gray-900 mb-3">
-                Subscription Text
-              </h4>
-              <div className="space-y-3">
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Typography
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Size (px)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={block.address.fontSize}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            address: {
+                              ...block.address,
+                              fontSize: parseInt(e.target.value),
+                            },
+                          })
+                        }
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Weight
+                      </Label>
+                      <select
+                        value={block.address.fontWeight}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            address: {
+                              ...block.address,
+                              fontWeight: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="bold">Bold</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Style
+                      </Label>
+                      <select
+                        value={block.address.fontStyle}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            address: {
+                              ...block.address,
+                              fontStyle: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Family
+                      </Label>
+                      <Input
+                        type="text"
+                        value={block.address.fontFamily}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            address: {
+                              ...block.address,
+                              fontFamily: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Arial, sans-serif"
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Color
+                      </Label>
+                      <Input
+                        type="color"
+                        value={block.address.fontColor}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            address: {
+                              ...block.address,
+                              fontColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {selectedFooterElement === "subscriptionText" && (
+              <>
                 <div>
-                  <Label className="text-xs text-gray-700">Content</Label>
+                  <Label className="text-xs font-semibold text-gray-700 mb-2 block">
+                    Content
+                  </Label>
                   <textarea
                     value={block.subscriptionText.content}
                     onChange={(e) =>
@@ -2729,258 +2794,311 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                         },
                       })
                     }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-valasys-orange focus:ring-2"
-                    rows={2}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
+                    rows={3}
                   />
                 </div>
-                <div>
-                  <Label className="text-xs text-gray-700">
-                    Font Size (px)
-                  </Label>
-                  <Input
-                    type="number"
-                    value={block.subscriptionText.fontSize}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        subscriptionText: {
-                          ...block.subscriptionText,
-                          fontSize: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Weight</Label>
-                  <select
-                    value={block.subscriptionText.fontWeight}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        subscriptionText: {
-                          ...block.subscriptionText,
-                          fontWeight: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="bold">Bold</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Style</Label>
-                  <select
-                    value={block.subscriptionText.fontStyle}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        subscriptionText: {
-                          ...block.subscriptionText,
-                          fontStyle: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="italic">Italic</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Family</Label>
-                  <Input
-                    type="text"
-                    value={block.subscriptionText.fontFamily}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        subscriptionText: {
-                          ...block.subscriptionText,
-                          fontFamily: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="Arial, sans-serif"
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Color</Label>
-                  <Input
-                    type="color"
-                    value={block.subscriptionText.fontColor}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        subscriptionText: {
-                          ...block.subscriptionText,
-                          fontColor: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div>
-              <h4 className="text-sm font-bold text-gray-900 mb-3">
-                Unsubscribe Link
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <Label className="text-xs text-gray-700">Link Text</Label>
-                  <Input
-                    type="text"
-                    value={block.unsubscribeLink.text}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          text: e.target.value,
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Typography
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Size (px)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={block.subscriptionText.fontSize}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            subscriptionText: {
+                              ...block.subscriptionText,
+                              fontSize: parseInt(e.target.value),
+                            },
+                          })
+                        }
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Weight
+                      </Label>
+                      <select
+                        value={block.subscriptionText.fontWeight}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            subscriptionText: {
+                              ...block.subscriptionText,
+                              fontWeight: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="bold">Bold</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Style
+                      </Label>
+                      <select
+                        value={block.subscriptionText.fontStyle}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            subscriptionText: {
+                              ...block.subscriptionText,
+                              fontStyle: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Family
+                      </Label>
+                      <Input
+                        type="text"
+                        value={block.subscriptionText.fontFamily}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            subscriptionText: {
+                              ...block.subscriptionText,
+                              fontFamily: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Arial, sans-serif"
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Color
+                      </Label>
+                      <Input
+                        type="color"
+                        value={block.subscriptionText.fontColor}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            subscriptionText: {
+                              ...block.subscriptionText,
+                              fontColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
+              </>
+            )}
+
+            {selectedFooterElement === "unsubscribeLink" && (
+              <>
                 <div>
-                  <Label className="text-xs text-gray-700">Link URL</Label>
-                  <Input
-                    type="url"
-                    value={block.unsubscribeLink.url}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          url: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="https://"
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">Link</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Link Text
+                      </Label>
+                      <Input
+                        type="text"
+                        value={block.unsubscribeLink.text}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              text: e.target.value,
+                            },
+                          })
+                        }
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Link URL
+                      </Label>
+                      <Input
+                        type="url"
+                        value={block.unsubscribeLink.url}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              url: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="https://example.com"
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <button
+                      className="text-xs text-valasys-orange font-semibold hover:text-valasys-orange"
+                      onClick={() =>
+                        onBlockUpdate({
+                          ...block,
+                          unsubscribeLink: {
+                            ...block.unsubscribeLink,
+                            url: "",
+                            text: "",
+                          },
+                        })
+                      }
+                    >
+                      Remove link
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-xs text-gray-700">
-                    Font Size (px)
-                  </Label>
-                  <Input
-                    type="number"
-                    value={block.unsubscribeLink.fontSize}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          fontSize: parseInt(e.target.value),
-                        },
-                      })
-                    }
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
+
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Typography
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Size (px)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={block.unsubscribeLink.fontSize}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              fontSize: parseInt(e.target.value),
+                            },
+                          })
+                        }
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Weight
+                      </Label>
+                      <select
+                        value={block.unsubscribeLink.fontWeight}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              fontWeight: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="bold">Bold</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Style
+                      </Label>
+                      <select
+                        value={block.unsubscribeLink.fontStyle}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              fontStyle: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Family
+                      </Label>
+                      <Input
+                        type="text"
+                        value={block.unsubscribeLink.fontFamily}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              fontFamily: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Arial, sans-serif"
+                        className="focus:ring-valasys-orange focus:ring-2"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Font Color
+                      </Label>
+                      <Input
+                        type="color"
+                        value={block.unsubscribeLink.fontColor}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              fontColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-1 block">
+                        Text Decoration
+                      </Label>
+                      <select
+                        value={block.unsubscribeLink.textDecoration}
+                        onChange={(e) =>
+                          onBlockUpdate({
+                            ...block,
+                            unsubscribeLink: {
+                              ...block.unsubscribeLink,
+                              textDecoration: e.target.value as any,
+                            },
+                          })
+                        }
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange"
+                      >
+                        <option value="none">None</option>
+                        <option value="underline">Underline</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Weight</Label>
-                  <select
-                    value={block.unsubscribeLink.fontWeight}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          fontWeight: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="bold">Bold</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Style</Label>
-                  <select
-                    value={block.unsubscribeLink.fontStyle}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          fontStyle: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="normal">Normal</option>
-                    <option value="italic">Italic</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Family</Label>
-                  <Input
-                    type="text"
-                    value={block.unsubscribeLink.fontFamily}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          fontFamily: e.target.value,
-                        },
-                      })
-                    }
-                    placeholder="Arial, sans-serif"
-                    className="focus:ring-valasys-orange focus:ring-2"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">Font Color</Label>
-                  <Input
-                    type="color"
-                    value={block.unsubscribeLink.fontColor}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          fontColor: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-700">
-                    Text Decoration
-                  </Label>
-                  <select
-                    value={block.unsubscribeLink.textDecoration}
-                    onChange={(e) =>
-                      onBlockUpdate({
-                        ...block,
-                        unsubscribeLink: {
-                          ...block.unsubscribeLink,
-                          textDecoration: e.target.value as any,
-                        },
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                  >
-                    <option value="none">None</option>
-                    <option value="underline">Underline</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         );
       case "spacer":
