@@ -302,17 +302,32 @@ export function compileHTML(htmlContent: string): string {
   }
 
   try {
+    const trimmed = htmlContent.trim();
+
+    if (!trimmed) {
+      return "";
+    }
+
     // Parse the HTML
-    const parsedNodes = parseHTML(htmlContent.trim());
+    const parsedNodes = parseHTML(trimmed);
+
+    // If parsing failed, return sanitized original content
+    if (!parsedNodes || parsedNodes.length === 0) {
+      return sanitizeHTML(trimmed);
+    }
 
     // Convert back to HTML with proper styling
     const compiledHTML = nodesToHTML(parsedNodes);
 
-    return compiledHTML;
+    return compiledHTML || sanitizeHTML(trimmed);
   } catch (error) {
-    // If parsing fails, return original content
+    // If parsing fails, return sanitized content as fallback
     console.error("HTML compilation error:", error);
-    return htmlContent;
+    try {
+      return sanitizeHTML(htmlContent);
+    } catch {
+      return "";
+    }
   }
 }
 
