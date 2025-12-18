@@ -16,8 +16,7 @@ interface EmailCanvasProps {
   onFooterElementSelect?: (element: string | null) => void;
   onTemplateSubjectChange: (subject: string) => void;
   onBackgroundColorChange: (color: string) => void;
-  onMoveBlockUp?: (index: number) => void;
-  onMoveBlockDown?: (index: number) => void;
+  onMoveBlock: (dragIndex: number, hoverIndex: number) => void;
   onDuplicateBlock?: (block: ContentBlock, position: number) => void;
   onDeleteBlock?: (blockId: string) => void;
 }
