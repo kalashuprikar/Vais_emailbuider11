@@ -15,6 +15,7 @@ import {
   NavigationBlock,
   HeaderBlock,
   FooterBlock,
+  FooterWithSocialBlock,
   SpacerBlock,
   CenteredImageCardBlock,
   SplitImageCardBlock,
