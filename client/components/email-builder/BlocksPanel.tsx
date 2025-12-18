@@ -282,7 +282,23 @@ const SectionsPanel: React.FC<SectionsPanelProps> = ({ onAddBlock }) => {
     },
     {
       title: "Footer & signatures",
-      blocks: [
+      templates: [
+        {
+          id: "footer-social",
+          title: "Footer with Social",
+          description: "Footer with social media icons and subscription message",
+          preview:
+            "data:image/svg+xml,%3Csvg width='400' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='200' fill='%23f5f5f5'/%3E%3Ccircle cx='100' cy='60' r='8' fill='%234267B2'/%3E%3Ccircle cx='120' cy='60' r='8' fill='%23E4405F'/%3E%3Ccircle cx='140' cy='60' r='8' fill='%230A66C2'/%3E%3Ccircle cx='160' cy='60' r='8' fill='%23FF0000'/%3E%3Ctext x='200' y='70' font-size='12' font-weight='bold' text-anchor='middle' fill='%23000'%3EEnterprise name%3C/text%3E%3Ctext x='200' y='90' font-size='11' text-anchor='middle' fill='%23666'%3E69 Street Name, 00000, City%3C/text%3E%3Ctext x='200' y='110' font-size='10' text-anchor='middle' fill='%23999'%3ENewsletter subscription message%3C/text%3E%3Ctext x='200' y='130' font-size='10' text-anchor='middle' fill='%23FF6A00'%3EUnsubscribe%3C/text%3E%3C/svg%3E",
+          blocks: () => createFooterWithSocialTemplate(),
+        },
+        {
+          id: "footer-contact",
+          title: "Footer with Contact",
+          description: "Footer with company info and contact details",
+          preview:
+            "data:image/svg+xml,%3Csvg width='400' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='200' fill='%23ffffff'/%3E%3Crect x='0' y='0' width='400' height='1' fill='%23e0e0e0'/%3E%3Ctext x='20' y='40' font-size='12' font-weight='bold' fill='%23000'%3EEnterprise name%3C/text%3E%3Ctext x='20' y='60' font-size='11' fill='%23666'%3E69 Street Name, 00000, City%3C/text%3E%3Ctext x='300' y='40' font-size='11' fill='%23666' text-anchor='end'%3EPrivacy | Terms | Policy%3C/text%3E%3Ctext x='300' y='60' font-size='11' fill='%23666' text-anchor='end'%3Econtact@enterprise.com%3C/text%3E%3Ctext x='300' y='80' font-size='11' fill='%23666' text-anchor='end'%3E+33 901 23 04 67%3C/text%3E%3C/svg%3E",
+          blocks: () => createFooterWithContactTemplate(),
+        },
         {
           id: "social",
           icon: <Share2 className="w-6 h-6 text-valasys-orange" />,
