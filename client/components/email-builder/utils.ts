@@ -686,6 +686,10 @@ export function renderBlockToHTML(block: ContentBlock): string {
         imageBlock.widthUnit === "%"
           ? `${imageBlock.width}%`
           : `${imageBlock.width}px`;
+      const imageHeight =
+        imageBlock.heightUnit === "%"
+          ? `${imageBlock.height}%`
+          : `${imageBlock.height}px`;
       const imageBorder =
         imageBlock.borderWidth > 0
           ? `border: ${imageBlock.borderWidth}px solid ${imageBlock.borderColor};`
@@ -696,7 +700,7 @@ export function renderBlockToHTML(block: ContentBlock): string {
           : imageBlock.alignment === "right"
             ? "block; margin-left: auto;"
             : "block; margin: auto;";
-      return `<img src="${imageBlock.src}" alt="${imageBlock.alt}" style="width: ${imageWidth}; display: ${imageDisplay} padding: ${imageBlock.padding}px; margin: ${imageBlock.margin}px; border-radius: ${imageBlock.borderRadius}px; ${imageBorder}" />`;
+      return `<img src="${imageBlock.src}" alt="${imageBlock.alt}" style="width: ${imageWidth}; height: ${imageHeight}; display: ${imageDisplay} padding: ${imageBlock.padding}px; margin: ${imageBlock.margin}px; border-radius: ${imageBlock.borderRadius}px; ${imageBorder}" />`;
     }
     case "video":
       return `<div style="text-align: ${block.alignment};"><video width="${block.width}" height="${block.height}" controls poster="${block.thumbnail}" style="max-width: 100%;"><source src="${block.src}" type="video/mp4"></video></div>`;
