@@ -189,10 +189,10 @@ export default function MyDownloadedList() {
   const [crmDialogOpen, setCrmDialogOpen] = useState(false);
   const [crmFile, setCrmFile] = useState<DownloadedFile | null>(null);
   const [selectedCrm, setSelectedCrm] = useState<
-    "hubspot" | "salesforce" | "marketo"
+    "hubspot" | "salesforce"
   >("hubspot");
   const [connectedCrms, setConnectedCrms] = useState<
-    Array<"hubspot" | "salesforce" | "marketo">
+    Array<"hubspot" | "salesforce">
   >([]);
   const [isUploadingCrm, setIsUploadingCrm] = useState(false);
   const [uploadDone, setUploadDone] = useState(false);
@@ -856,24 +856,6 @@ export default function MyDownloadedList() {
 
                                 <DropdownMenuSeparator className="my-2" />
 
-                                {/* Marketo Option */}
-                                <div className="px-2 pb-2">
-                                  <DropdownMenuItem
-                                    onSelect={() => {
-                                      setCrmFile(file);
-                                      setSelectedCrm("marketo");
-                                      setCrmDialogOpen(true);
-                                    }}
-                                    className="rounded-md overflow-hidden focus:bg-transparent p-0"
-                                  >
-                                    <div className="w-full rounded-md border border-purple-200 bg-white px-3 py-2.5 hover:bg-purple-50 hover:border-purple-300 flex items-center gap-2 transition-colors cursor-pointer">
-                                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#5C4BAF] text-white text-xs font-bold">
-                                        MK
-                                      </span>
-                                      <span className="text-sm font-medium text-gray-900">Marketo</span>
-                                    </div>
-                                  </DropdownMenuItem>
-                                </div>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
