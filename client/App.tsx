@@ -50,6 +50,7 @@ import MasteryGuide from "./pages/MasteryGuide";
 import ContactSales from "./pages/ContactSales";
 import Maintenance from "./pages/Maintenance";
 import Templates from "./pages/Templates";
+import LandingPages from "./pages/LandingPages";
 
 const queryClient = new QueryClient();
 
