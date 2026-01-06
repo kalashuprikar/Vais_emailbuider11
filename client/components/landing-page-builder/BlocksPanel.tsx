@@ -84,7 +84,7 @@ export const BlocksPanel: React.FC<BlocksPanelProps> = ({ onAddBlock }) => {
     },
     {
       id: "footer",
-      icon: <Footer className="w-6 h-6 text-valasys-orange" />,
+      icon: <Copyright className="w-6 h-6 text-valasys-orange" />,
       label: "Footer",
       description: "Footer with links and info",
       onCreate: createFooterBlock,
