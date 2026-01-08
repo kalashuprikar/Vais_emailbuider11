@@ -11,6 +11,10 @@ import {
   ContactFormBlockPreview,
   FooterBlockPreview,
   SpacerBlockPreview,
+  PricingBlockPreview,
+  FaqBlockPreview,
+  SignupBlockPreview,
+  PricingFooterBlockPreview,
 } from "./BlockPreviews";
 
 interface LandingPagePreviewProps {
