@@ -224,6 +224,12 @@ export default function MyDownloadedList() {
     hsDisplayName.trim().length > 0 &&
     hsToken.trim().length > 0 &&
     hsOwnerId.trim().length > 0;
+  const [sendMailDialogOpen, setSendMailDialogOpen] = useState(false);
+  const [mailFile, setMailFile] = useState<DownloadedFile | null>(null);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [mailSubject, setMailSubject] = useState("");
+  const [mailBody, setMailBody] = useState("");
+  const [isSendingMail, setIsSendingMail] = useState(false);
 
   useEffect(() => {
     if (!hsThankOpen || !hsThankProcessing) return;
