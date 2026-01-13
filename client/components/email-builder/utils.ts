@@ -859,6 +859,22 @@ export function renderBlockToHTML(block: ContentBlock): string {
       const compiled = compileHTML(sanitized);
       return `<div style="width: ${htmlBlock.width}${htmlBlock.widthUnit}; padding: ${htmlBlock.padding}px; margin: ${htmlBlock.margin}px;">${compiled}</div>`;
     }
+    case "twoColumnCard": {
+      const twoColBlock = block as any;
+      const width = `${twoColBlock.width}${twoColBlock.widthUnit}`;
+      const cardsHtml = twoColBlock.cards
+        ?.map(
+          (card: any) =>
+            `<div style="width: 48%; display: inline-block; vertical-align: top; padding-right: 10px; box-sizing: border-box;">
+              <div style="background-color: ${card.backgroundColor}; color: ${card.textColor}; padding: ${card.padding}px; border-radius: ${card.borderRadius}px; margin: ${card.margin}px;">
+                <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">${card.title}</h3>
+                <p style="margin: 0; font-size: 14px; line-height: 1.5;">${card.description}</p>
+              </div>
+            </div>`,
+        )
+        .join("");
+      return `<div style="width: ${width};"><div style="display: flex; gap: 20px;">${cardsHtml}</div></div>`;
+    }
     case "divider":
       return `<hr style="border: none; border-top: ${block.height}px solid ${block.color}; margin: ${block.margin}px 0;" />`;
     case "product": {
