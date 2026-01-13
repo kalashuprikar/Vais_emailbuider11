@@ -45,6 +45,8 @@ import {
   Plus,
   Save,
   Loader2,
+  Mail,
+  MoreVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -223,6 +225,12 @@ export default function MyDownloadedList() {
     hsDisplayName.trim().length > 0 &&
     hsToken.trim().length > 0 &&
     hsOwnerId.trim().length > 0;
+  const [sendMailDialogOpen, setSendMailDialogOpen] = useState(false);
+  const [mailFile, setMailFile] = useState<DownloadedFile | null>(null);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [mailSubject, setMailSubject] = useState("");
+  const [mailBody, setMailBody] = useState("");
+  const [isSendingMail, setIsSendingMail] = useState(false);
 
   useEffect(() => {
     if (!hsThankOpen || !hsThankProcessing) return;
@@ -696,180 +704,126 @@ export default function MyDownloadedList() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center justify-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDownload(file)}
-                              className="h-8 w-8 p-0 text-valasys-orange border-valasys-orange hover:bg-valasys-orange hover:text-white"
-                              title="Download file"
-                            >
-                              <Download className="h-3 w-3" />
-                            </Button>
+                          <div className="flex items-center justify-center">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button
-                                  data-tour="send-to-crm-button"
                                   variant="outline"
                                   size="sm"
-                                  className="h-8 px-2 text-blue-700 border-blue-300 hover:bg-blue-50 hover:text-blue-800 transition-colors"
-                                  title="Send to CRM"
+                                  className="h-8 w-8 p-0"
+                                  title="Actions"
                                 >
-                                  <UploadCloud className="h-3 w-3 mr-1" />
-                                  Send to CRM
+                                  <MoreVertical className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent
-                                align="end"
-                                className="w-80 p-0 shadow-2xl rounded-xl border border-gray-200"
-                              >
-                                {/* Salesforce Section */}
-                                <div className="px-3 pt-3 pb-2">
-                                  <div className="px-3 py-2.5 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 mb-3 shadow-sm">
-                                    <div className="flex items-center gap-3">
-                                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#00A1E0] to-[#0088B8] text-white text-xs font-bold shadow-md">
-                                        SF
-                                      </span>
-                                      <span className="text-sm font-bold text-blue-900 tracking-tight">
-                                        Salesforce
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="space-y-1.5 mb-2.5">
-                                    {salesforceAccounts.length === 0 ? (
-                                      <div className="px-2 py-2 text-xs text-gray-500 italic">
-                                        No accounts connected
+                              <DropdownMenuContent align="end" className="w-48">
+                                {/* Download Action */}
+                                <DropdownMenuItem
+                                  onSelect={() => handleDownload(file)}
+                                  className="cursor-pointer"
+                                >
+                                  <Download className="h-4 w-4 mr-2 text-valasys-orange" />
+                                  <span>Download</span>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuSeparator />
+
+                                {/* Send to CRM Action */}
+                                <DropdownMenuSub>
+                                  <DropdownMenuSubTrigger className="cursor-pointer">
+                                    <UploadCloud className="h-4 w-4 mr-2 text-blue-600" />
+                                    <span>Send to CRM</span>
+                                  </DropdownMenuSubTrigger>
+                                  <DropdownMenuSubContent className="w-72">
+                                    {/* Salesforce Section */}
+                                    <div className="px-2 py-2">
+                                      <div className="px-2 py-2 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 mb-2">
+                                        <div className="flex items-center gap-2">
+                                          <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-[#00A1E0] text-white text-[10px] font-bold">
+                                            SF
+                                          </span>
+                                          <span className="text-xs font-bold text-blue-900">
+                                            Salesforce
+                                          </span>
+                                        </div>
                                       </div>
-                                    ) : (
-                                      salesforceAccounts.map((acc) => (
-                                        <DropdownMenuItem
-                                          key={acc.id}
-                                          onSelect={() => {
-                                            setCrmFile(file);
-                                            setSelectedCrm("salesforce");
-                                            setCrmDialogOpen(true);
-                                          }}
-                                          className="p-0 rounded-md overflow-hidden focus:bg-transparent"
-                                        >
-                                          <div className="flex items-center justify-between w-full rounded-md border border-blue-200 bg-white px-3 py-2.5 hover:bg-blue-50 hover:border-blue-300 transition-colors">
-                                            <div className="flex items-center gap-2 flex-1 cursor-pointer">
-                                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                                              <span className="text-sm font-medium text-gray-900">
-                                                {acc.name}
-                                              </span>
-                                            </div>
-                                            <button
-                                              aria-label="Delete account"
-                                              className="text-gray-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setSalesforceAccounts((prev) =>
-                                                  prev.filter(
-                                                    (a) => a.id !== acc.id,
-                                                  ),
-                                                );
-                                              }}
-                                              title="Delete account"
-                                            >
-                                              <Trash2 className="h-3.5 w-3.5" />
-                                            </button>
+                                      <div className="space-y-1 mb-2">
+                                        {salesforceAccounts.length === 0 ? (
+                                          <div className="px-2 py-1 text-xs text-gray-500 italic">
+                                            No accounts connected
                                           </div>
-                                        </DropdownMenuItem>
-                                      ))
-                                    )}
-                                  </div>
-                                  <DropdownMenuItem
-                                    className="rounded-md overflow-hidden focus:bg-transparent p-0"
-                                    onSelect={(e) => {
-                                      e.preventDefault();
-                                      setSfAddOpen(true);
-                                    }}
-                                  >
-                                    <div className="w-full px-3 py-2.5 rounded-lg bg-gradient-to-r from-blue-100 to-blue-150 text-blue-700 hover:from-blue-200 hover:to-blue-250 border border-blue-400 hover:border-blue-500 flex items-center justify-center gap-2 transition-all cursor-pointer font-medium shadow-sm hover:shadow-md">
-                                      <Plus className="h-4 w-4" />
-                                      <span className="text-sm font-semibold">
-                                        Add Salesforce Account
-                                      </span>
-                                    </div>
-                                  </DropdownMenuItem>
-                                </div>
-
-                                <DropdownMenuSeparator className="my-2" />
-
-                                {/* HubSpot Section */}
-                                <div className="px-3 py-2">
-                                  <div className="px-3 py-2.5 rounded-lg bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 mb-3 shadow-sm">
-                                    <div className="flex items-center gap-3">
-                                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF7A59] to-[#E85A38] text-white text-xs font-bold shadow-md">
-                                        HS
-                                      </span>
-                                      <span className="text-sm font-bold text-orange-900 tracking-tight">
-                                        HubSpot
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="space-y-1.5 mb-2.5">
-                                    {hubspotAccounts.length === 0 ? (
-                                      <div className="px-2 py-2 text-xs text-gray-500 italic">
-                                        No accounts connected
+                                        ) : (
+                                          salesforceAccounts.map((acc) => (
+                                            <DropdownMenuItem
+                                              key={acc.id}
+                                              onSelect={() => {
+                                                setCrmFile(file);
+                                                setSelectedCrm("salesforce");
+                                                setCrmDialogOpen(true);
+                                              }}
+                                              className="cursor-pointer text-sm"
+                                            >
+                                              <div className="w-1 h-1 rounded-full bg-blue-500 mr-2"></div>
+                                              <span>{acc.name}</span>
+                                            </DropdownMenuItem>
+                                          ))
+                                        )}
                                       </div>
-                                    ) : (
-                                      hubspotAccounts.map((acc) => (
-                                        <DropdownMenuItem
-                                          key={acc.id}
-                                          onSelect={() => {
-                                            setCrmFile(file);
-                                            setSelectedCrm("hubspot");
-                                            setCrmDialogOpen(true);
-                                          }}
-                                          className="p-0 rounded-md overflow-hidden focus:bg-transparent"
-                                        >
-                                          <div className="flex items-center justify-between w-full rounded-md border border-orange-200 bg-white px-3 py-2.5 hover:bg-orange-50 hover:border-orange-300 transition-colors">
-                                            <div className="flex items-center gap-2 flex-1 cursor-pointer">
-                                              <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                                              <span className="text-sm font-medium text-gray-900">
-                                                {acc.name}
-                                              </span>
-                                            </div>
-                                            <button
-                                              aria-label="Delete account"
-                                              className="text-gray-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setHubspotAccounts((prev) =>
-                                                  prev.filter(
-                                                    (a) => a.id !== acc.id,
-                                                  ),
-                                                );
-                                              }}
-                                              title="Delete account"
-                                            >
-                                              <Trash2 className="h-3.5 w-3.5" />
-                                            </button>
-                                          </div>
-                                        </DropdownMenuItem>
-                                      ))
-                                    )}
-                                  </div>
-                                  <DropdownMenuItem
-                                    className="rounded-md overflow-hidden focus:bg-transparent p-0"
-                                    onSelect={(e) => {
-                                      e.preventDefault();
-                                      setHsAddOpen(true);
-                                    }}
-                                  >
-                                    <div className="w-full px-3 py-2.5 rounded-lg bg-gradient-to-r from-orange-100 to-orange-150 text-orange-700 hover:from-orange-200 hover:to-orange-250 border border-orange-400 hover:border-orange-500 flex items-center justify-center gap-2 transition-all cursor-pointer font-medium shadow-sm hover:shadow-md">
-                                      <Plus className="h-4 w-4" />
-                                      <span className="text-sm font-semibold">
-                                        Add HubSpot Account
-                                      </span>
                                     </div>
-                                  </DropdownMenuItem>
-                                </div>
 
-                                <DropdownMenuSeparator className="my-2" />
+                                    <DropdownMenuSeparator className="my-1" />
+
+                                    {/* HubSpot Section */}
+                                    <div className="px-2 py-2">
+                                      <div className="px-2 py-2 rounded-lg bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 mb-2">
+                                        <div className="flex items-center gap-2">
+                                          <span className="inline-flex items-center justify-center w-6 h-6 rounded bg-[#FF7A59] text-white text-[10px] font-bold">
+                                            HS
+                                          </span>
+                                          <span className="text-xs font-bold text-orange-900">
+                                            HubSpot
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div className="space-y-1 mb-2">
+                                        {hubspotAccounts.length === 0 ? (
+                                          <div className="px-2 py-1 text-xs text-gray-500 italic">
+                                            No accounts connected
+                                          </div>
+                                        ) : (
+                                          hubspotAccounts.map((acc) => (
+                                            <DropdownMenuItem
+                                              key={acc.id}
+                                              onSelect={() => {
+                                                setCrmFile(file);
+                                                setSelectedCrm("hubspot");
+                                                setCrmDialogOpen(true);
+                                              }}
+                                              className="cursor-pointer text-sm"
+                                            >
+                                              <div className="w-1 h-1 rounded-full bg-orange-500 mr-2"></div>
+                                              <span>{acc.name}</span>
+                                            </DropdownMenuItem>
+                                          ))
+                                        )}
+                                      </div>
+                                    </div>
+                                  </DropdownMenuSubContent>
+                                </DropdownMenuSub>
+
+                                <DropdownMenuSeparator />
+
+                                {/* Send Mail Action */}
+                                <DropdownMenuItem
+                                  onSelect={() => {
+                                    setMailFile(file);
+                                    setSendMailDialogOpen(true);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <Mail className="h-4 w-4 mr-2 text-green-600" />
+                                  <span>Send Mail</span>
+                                </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
@@ -1861,6 +1815,122 @@ export default function MyDownloadedList() {
             <DialogFooter>
               <Button variant="outline" onClick={() => setCrmDialogOpen(false)}>
                 Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Send Mail Dialog */}
+        <Dialog open={sendMailDialogOpen} onOpenChange={setSendMailDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Send File via Email</DialogTitle>
+              <DialogDescription>
+                Share "{mailFile?.fileName}" with a recipient via email
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              {/* Recipient Email */}
+              <div>
+                <Label htmlFor="recipient-email">
+                  Recipient Email <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="recipient-email"
+                  type="email"
+                  value={recipientEmail}
+                  onChange={(e) => setRecipientEmail(e.target.value)}
+                  placeholder="recipient@example.com"
+                  required
+                />
+              </div>
+
+              {/* Email Subject */}
+              <div>
+                <Label htmlFor="mail-subject">
+                  Subject <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="mail-subject"
+                  value={mailSubject}
+                  onChange={(e) => setMailSubject(e.target.value)}
+                  placeholder="Enter email subject"
+                  required
+                />
+              </div>
+
+              {/* Email Body */}
+              <div>
+                <Label htmlFor="mail-body">Message</Label>
+                <textarea
+                  id="mail-body"
+                  value={mailBody}
+                  onChange={(e) => setMailBody(e.target.value)}
+                  placeholder="Add a message (optional)"
+                  className="w-full px-3 py-2 border border-valasys-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent resize-none"
+                  rows={4}
+                />
+              </div>
+
+              {/* File Details */}
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
+                <div className="flex items-start gap-2">
+                  <FileText className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="text-sm text-blue-900">
+                    <p className="font-medium">File will be sent as attachment</p>
+                    <p className="text-xs mt-1">
+                      {mailFile?.fileName} ({mailFile?.fileSize}) • {mailFile?.dataCount.toLocaleString()} records
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSendMailDialogOpen(false);
+                  setRecipientEmail("");
+                  setMailSubject("");
+                  setMailBody("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  isSendingMail ||
+                  !recipientEmail.trim() ||
+                  !mailSubject.trim()
+                }
+                onClick={() => {
+                  setIsSendingMail(true);
+                  setTimeout(() => {
+                    console.log("Email sent to:", recipientEmail);
+                    console.log("Subject:", mailSubject);
+                    console.log("File:", mailFile?.fileName);
+                    setIsSendingMail(false);
+                    setSendMailDialogOpen(false);
+                    setRecipientEmail("");
+                    setMailSubject("");
+                    setMailBody("");
+                  }, 1000);
+                }}
+                className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSendingMail ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 mr-2" />
+                    Send Email
+                  </>
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>
