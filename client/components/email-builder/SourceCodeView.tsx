@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { EmailTemplate } from "./types";
 import { renderTemplateToHTML } from "./utils";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { Copy, Download } from "lucide-react";
+import { toast } from "sonner";
 
 interface SourceCodeViewProps {
   template: EmailTemplate;
@@ -10,16 +23,50 @@ interface SourceCodeViewProps {
 
 export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
   const [copied, setCopied] = useState(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   const htmlContent = renderTemplateToHTML(template);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(htmlContent);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const handleCopy = useCallback(() => {
+    if (!htmlContent) {
+      console.error("No content to copy");
+      return;
+    }
 
-  const handleDownload = () => {
+    navigator.clipboard
+      .writeText(htmlContent)
+      .then(() => {
+        console.log("Content copied to clipboard");
+        setCopied(true);
+        setOpenTooltip(true);
+        setTimeout(() => {
+          setCopied(false);
+          setOpenTooltip(false);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+        // Fallback: use old method
+        const textArea = document.createElement("textarea");
+        textArea.value = htmlContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          setCopied(true);
+          setOpenTooltip(true);
+          setTimeout(() => {
+            setCopied(false);
+            setOpenTooltip(false);
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback copy failed:", err);
+        }
+        document.body.removeChild(textArea);
+      });
+  }, [htmlContent]);
+
+  const handleDownloadHTML = () => {
     const element = document.createElement("a");
     const file = new Blob([htmlContent], { type: "text/html" });
     element.href = URL.createObjectURL(file);
@@ -27,6 +74,151 @@ export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+
+    toast.success("HTML downloaded successfully");
+  };
+
+  const handleDownloadInlineHTML = () => {
+    // Create pure HTML with inline CSS
+    const inlineHTMLContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${template.subject}</title>
+</head>
+<body style="background-color: ${template.backgroundColor || "#ffffff"}; padding: ${template.padding || 0}px; font-family: Arial, sans-serif; margin: 0;">
+  <div style="max-width: 600px; margin: 0 auto;">
+${htmlContent.substring(htmlContent.indexOf('<div style="max-width:'), htmlContent.lastIndexOf("</div>") + 6)}
+  </div>
+</body>
+</html>`;
+
+    const element = document.createElement("a");
+    const file = new Blob([inlineHTMLContent], { type: "text/html" });
+    element.href = URL.createObjectURL(file);
+    element.download = `${template.name || "template"}.html`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+
+    toast.success("Pure HTML with inline CSS downloaded successfully");
+  };
+
+  const handleDownloadPDF = () => {
+    // Create a new window to print as PDF with the email preview
+    const printWindow = window.open("", "", "height=900,width=1200");
+    if (printWindow) {
+      const bgColor = template.backgroundColor || "#ffffff";
+      const padding = template.padding || 20;
+
+      try {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>${template.name || "Template"}</title>
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body {
+                font-family: Arial, sans-serif;
+                background-color: #f5f5f5;
+                padding: 40px 20px;
+              }
+              .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 40px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              }
+              .header {
+                border-bottom: 2px solid #e0e0e0;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+              }
+              .header h1 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 10px;
+              }
+              .subject {
+                margin-top: 5px;
+                padding: 8px 12px;
+                background-color: #f0f0f0;
+                border-radius: 4px;
+                display: inline-block;
+                color: #666;
+                font-size: 14px;
+              }
+              .email-preview {
+                border-radius: 4px;
+                min-height: 400px;
+              }
+              .email-preview img {
+                max-width: 100%;
+                height: auto;
+              }
+              .email-preview h1, .email-preview h2, .email-preview h3 {
+                margin-bottom: 15px;
+              }
+              .email-preview p {
+                margin-bottom: 10px;
+                line-height: 1.6;
+              }
+              .email-preview a {
+                color: #007bff;
+                text-decoration: none;
+              }
+              .email-preview button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+              }
+              @media print {
+                body {
+                  background-color: white;
+                  padding: 0;
+                }
+                .container {
+                  box-shadow: none;
+                  padding: 20px 0;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>${template.name || "Email Template"}</h1>
+                <div class="subject"><strong>Subject:</strong> ${template.subject || "No Subject"}</div>
+              </div>
+              <div class="email-preview" style="background-color: ${bgColor}; padding: ${padding}px;">
+                ${htmlContent}
+              </div>
+            </div>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+        setTimeout(() => {
+          printWindow.print();
+          setTimeout(() => printWindow.close(), 100);
+        }, 250);
+      } catch (error) {
+        console.error("Error generating PDF preview:", error);
+        toast.error("Failed to generate PDF preview");
+      }
+    }
+
+    toast.success(
+      "PDF preview opened. Use your browser's print dialog to save as PDF",
+    );
   };
 
   return (
@@ -41,26 +233,50 @@ export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
             Complete HTML for: {template.name || "Untitled Template"}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="gap-2"
-          >
-            <Copy className="w-4 h-4" />
-            {copied ? "Copied!" : "Copy Code"}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDownload}
-            className="gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Download
-          </Button>
-        </div>
+        <TooltipProvider delayDuration={200}>
+          <div className="flex items-center gap-2">
+            <Tooltip open={openTooltip} onOpenChange={setOpenTooltip}>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="sm" onClick={handleCopy}>
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="font-medium" side="top">
+                {copied ? "Copied!" : "Copy Code"}
+              </TooltipContent>
+            </Tooltip>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Download className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-max">
+                <DropdownMenuItem
+                  onClick={handleDownloadHTML}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download HTML
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDownloadPDF}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download Preview (PDF)
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDownloadInlineHTML}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download Pure HTML
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </TooltipProvider>
       </div>
 
       {/* Code Display */}

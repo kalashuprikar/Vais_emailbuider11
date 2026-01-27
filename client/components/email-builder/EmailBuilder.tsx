@@ -32,16 +32,7 @@ import {
   generateId,
   renderTemplateToHTML,
 } from "./utils";
-import {
-  Save,
-  Download,
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  ChevronLeft,
-  Code,
-} from "lucide-react";
+import { Save, Eye, Edit, Trash2, Plus, ChevronLeft, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EmailCanvas } from "./EmailCanvas";
 import { SourceCodeView } from "./SourceCodeView";
@@ -190,17 +181,6 @@ export const EmailBuilder: React.FC<EmailBuilderProps> = ({
     setShowSaveDialog(false);
   };
 
-  const handleDownloadHTML = () => {
-    const htmlContent = renderTemplateToHTML(template);
-    const element = document.createElement("a");
-    const file = new Blob([htmlContent], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    element.download = `${templateName || "template"}.html`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
-
   const handleUndo = useCallback(() => {
     if (undoStack.length > 0) {
       const newUndo = [...undoStack];
@@ -305,21 +285,6 @@ export const EmailBuilder: React.FC<EmailBuilderProps> = ({
                   </TooltipTrigger>
                   <TooltipContent className="font-medium">
                     Preview & test
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleDownloadHTML}
-                    >
-                      <Download className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="font-medium">
-                    Download HTML
                   </TooltipContent>
                 </Tooltip>
 
