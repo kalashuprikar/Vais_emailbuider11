@@ -28,17 +28,13 @@ export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
   const htmlContent = renderTemplateToHTML(template);
 
   const handleCopy = useCallback(() => {
-    if (!htmlContent) {
-      console.error("No content to copy");
-      return;
-    }
-
     navigator.clipboard
       .writeText(htmlContent)
       .then(() => {
         console.log("Content copied to clipboard");
         setCopied(true);
         setOpenTooltip(true);
+        toast.success("Code copied to clipboard");
         setTimeout(() => {
           setCopied(false);
           setOpenTooltip(false);
@@ -55,12 +51,14 @@ export const SourceCodeView: React.FC<SourceCodeViewProps> = ({ template }) => {
           document.execCommand("copy");
           setCopied(true);
           setOpenTooltip(true);
+          toast.success("Code copied to clipboard");
           setTimeout(() => {
             setCopied(false);
             setOpenTooltip(false);
           }, 2000);
         } catch (err) {
           console.error("Fallback copy failed:", err);
+          toast.error("Failed to copy code");
         }
         document.body.removeChild(textArea);
       });
