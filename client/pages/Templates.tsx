@@ -18,8 +18,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   getTemplatesFromLocalStorage,
   deleteTemplateFromLocalStorage,
+  renderTemplateToHTML,
 } from "@/components/email-builder/utils";
-import { Mail, Plus, Trash2, Edit2, Eye } from "lucide-react";
+import { Mail, Plus, Trash2, Edit2, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type View = "list" | "editor";
