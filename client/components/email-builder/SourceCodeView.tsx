@@ -248,21 +248,50 @@ ${htmlContent.substring(htmlContent.indexOf('<div style="max-width:'), htmlConte
             Complete HTML for: {template.name || "Untitled Template"}
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <Tooltip open={openTooltip} onOpenChange={setOpenTooltip}>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="sm" onClick={handleCopy}>
-                <Copy className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="font-medium" side="top">
-              {copied ? "Copied!" : "Copy Code"}
-            </TooltipContent>
-          </Tooltip>
-          <Button variant="outline" size="sm" onClick={handleDownloadInlineHTML}>
-            <Download className="w-4 h-4" />
-          </Button>
-        </div>
+        <TooltipProvider delayDuration={200}>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Tooltip open={openTooltip} onOpenChange={setOpenTooltip}>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="sm" onClick={handleCopy}>
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="font-medium" side="top">
+                {copied ? "Copied!" : "Copy Code"}
+              </TooltipContent>
+            </Tooltip>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Download className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-max">
+                <DropdownMenuItem
+                  onClick={handleDownloadHTML}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download HTML
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDownloadPDF}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download Preview (PDF)
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDownloadInlineHTML}
+                  className="py-2.5"
+                >
+                  <Download className="w-4 h-4 mr-3" />
+                  Download Pure HTML
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </TooltipProvider>
       </div>
 
       {/* Code Display */}
