@@ -287,6 +287,15 @@ const SectionsPanel: React.FC<SectionsPanelProps> = ({ onAddBlock }) => {
           blocks: () => createHeaderLogoAndNavigationTemplate(),
         },
       ],
+      blocks: [
+        {
+          id: "header",
+          icon: <Menu className="w-6 h-6 text-valasys-orange" />,
+          label: "Header",
+          description: "Logo, company name, and links",
+          onCreate: () => createHeaderBlock(),
+        },
+      ],
     },
     {
       title: "Footer & signatures",
