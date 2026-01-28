@@ -53,6 +53,11 @@ export const TitleBlockComponent: React.FC<TitleBlockComponentProps> = ({
     border: block.borderWidth
       ? `${block.borderWidth}px solid ${block.borderColor}`
       : undefined,
+    boxSizing: "border-box" as const,
+    overflow: "hidden" as const,
+    wordWrap: "break-word" as const,
+    overflowWrap: "break-word" as const,
+    whiteSpace: "normal" as const,
   };
 
   return (
