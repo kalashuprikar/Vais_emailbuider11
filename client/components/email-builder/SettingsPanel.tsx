@@ -1441,11 +1441,17 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     src={(block as any).src}
                     alt="Preview"
                     className="max-w-full max-h-full"
-                    onError={() => (
-                      <div className="text-gray-400 text-xs">
-                        Image failed to load
-                      </div>
-                    )}
+                    onError={(e) => {
+                      console.error("❌ Image failed to load. This may be due to CORS restrictions or an invalid URL.", (block as any).src);
+                      (e.target as HTMLImageElement).style.display = "none";
+                      const parent = (e.target as HTMLImageElement).parentElement;
+                      if (parent) {
+                        const errorDiv = document.createElement("div");
+                        errorDiv.className = "text-gray-400 text-xs text-center";
+                        errorDiv.textContent = "Image failed to load (CORS or invalid URL)";
+                        parent.appendChild(errorDiv);
+                      }
+                    }}
                   />
                 </div>
               ) : (
