@@ -59,7 +59,7 @@ export const EmailCanvas: React.FC<EmailCanvasProps> = ({
       <div className="max-w-2xl mx-auto">
         {/* Template Settings */}
         <div className="bg-white border border-gray-200 rounded-t-lg p-4 overflow-x-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="min-w-0">
               <label
                 htmlFor="subject"
@@ -89,13 +89,13 @@ export const EmailCanvas: React.FC<EmailCanvasProps> = ({
                   type="color"
                   value={template.backgroundColor}
                   onChange={(e) => onBackgroundColorChange(e.target.value)}
-                  className="text-sm w-10 h-10 border border-gray-300 rounded cursor-pointer flex-shrink-0"
+                  className="text-sm w-10 h-10 border border-gray-300 rounded cursor-pointer flex-shrink-0 mr-2"
                 />
                 <input
                   type="text"
                   value={template.backgroundColor}
                   onChange={(e) => onBackgroundColorChange(e.target.value)}
-                  className="text-sm border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent lg:flex-1 w-20 lg:w-auto"
+                  className="text-sm border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent flex-1 mr-2"
                   placeholder="#ffffff"
                 />
               </div>

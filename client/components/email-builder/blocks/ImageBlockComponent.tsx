@@ -18,9 +18,23 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (warn if > 1MB)
+      if (file.size > 1024 * 1024) {
+        console.warn(
+          "⚠️ Large image detected! File size: " +
+            (file.size / 1024 / 1024).toFixed(2) +
+            "MB. Consider using a smaller image to avoid storage issues.",
+        );
+      }
       const reader = new FileReader();
       reader.onload = (event) => {
-        onSrcChange(event.target?.result as string);
+        const result = event.target?.result as string;
+        if (result) {
+          onSrcChange(result);
+        }
+      };
+      reader.onerror = () => {
+        console.error("❌ Failed to read image file");
       };
       reader.readAsDataURL(file);
     }

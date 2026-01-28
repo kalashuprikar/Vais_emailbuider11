@@ -16,9 +16,26 @@ export const HeaderBlockComponent: React.FC<HeaderBlockComponentProps> = ({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (warn if > 1MB)
+      if (file.size > 1024 * 1024) {
+        console.warn(
+          "⚠️ Large image detected! File size: " +
+            (file.size / 1024 / 1024).toFixed(2) +
+            "MB. Consider using a smaller image to avoid storage issues.",
+        );
+      }
       const reader = new FileReader();
       reader.onload = (event) => {
-        onLogoChange(event.target?.result as string);
+        const result = event.target?.result as string;
+        if (result) {
+          console.log("✅ Header image loaded successfully");
+          onLogoChange(result);
+        } else {
+          console.error("❌ Failed to read image data");
+        }
+      };
+      reader.onerror = () => {
+        console.error("❌ Failed to read image file");
       };
       reader.readAsDataURL(file);
     }
