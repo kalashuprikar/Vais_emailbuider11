@@ -3747,13 +3747,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                     <Input
                       type="number"
                       min="0"
+                      step="any"
                       value={block.height ?? 200}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const value = e.target.value ? parseInt(e.target.value) : 200;
                         onBlockUpdate({
                           ...block,
-                          height: parseInt(e.target.value) || 200,
-                        })
-                      }
+                          height: value,
+                        });
+                      }}
                       className="flex-1 focus:ring-valasys-orange focus:ring-2"
                     />
                     <span className="px-2 py-1 text-sm text-gray-600">px</span>
