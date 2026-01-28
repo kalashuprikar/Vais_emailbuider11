@@ -3905,7 +3905,19 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       value={videoHeightInput}
                       onChange={(e) => {
                         const inputValue = e.target.value;
+                        const numericValue = inputValue.replace(/[^\d]/g, "");
+
                         setVideoHeightInput(inputValue);
+
+                        if (numericValue !== "") {
+                          const num = parseInt(numericValue);
+                          if (num >= 1 && num <= 1000) {
+                            onBlockUpdate({
+                              ...block,
+                              height: num,
+                            });
+                          }
+                        }
                       }}
                       onBlur={(e) => {
                         const inputValue = e.target.value;
@@ -3918,17 +3930,18 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           setVideoHeightInput("200");
                         } else {
                           const num = parseInt(numericValue);
-                          if (num <= 1000) {
-                            onBlockUpdate({
-                              ...block,
-                              height: num,
-                            });
-                          } else {
+                          if (num > 1000) {
                             onBlockUpdate({
                               ...block,
                               height: 1000,
                             });
                             setVideoHeightInput("1000");
+                          } else if (num < 1) {
+                            onBlockUpdate({
+                              ...block,
+                              height: 1,
+                            });
+                            setVideoHeightInput("1");
                           }
                         }
                       }}
