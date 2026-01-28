@@ -77,7 +77,7 @@ export const ButtonBlockComponent: React.FC<ButtonBlockComponentProps> = ({
           <div
             style={{
               position: "absolute",
-              bottom: "calc(100% + 10px)",
+              bottom: "calc(100% + 18px)",
               left: "50%",
               transform: "translateX(-50%) scale(1)",
               backgroundColor: "#1F2937",
