@@ -59,8 +59,8 @@ export const EmailCanvas: React.FC<EmailCanvasProps> = ({
       <div className="max-w-2xl mx-auto">
         {/* Template Settings */}
         <div className="bg-white border border-gray-200 rounded-t-lg p-4 overflow-x-hidden">
-          <div className="flex gap-3">
-            <div className="flex-1 min-w-0">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="min-w-0">
               <label
                 htmlFor="subject"
                 className="text-xs font-medium text-gray-700 block"
@@ -76,7 +76,7 @@ export const EmailCanvas: React.FC<EmailCanvasProps> = ({
                 className="text-sm mt-1 w-full border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-valasys-orange focus:border-transparent"
               />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0">
               <label
                 htmlFor="bgColor"
                 className="text-xs font-medium text-gray-700 block"
