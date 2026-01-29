@@ -34,6 +34,7 @@ export const LandingPagePreview: React.FC<LandingPagePreviewProps> = ({
   onUpdateBlock,
   onDeleteBlock,
   onMoveBlock,
+  onDuplicateBlock,
 }) => {
   const renderBlock = (block: LandingPageBlock, index: number) => {
     const isSelected = selectedBlockId === block.id;
