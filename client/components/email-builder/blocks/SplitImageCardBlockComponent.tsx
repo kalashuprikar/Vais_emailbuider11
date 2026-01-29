@@ -107,7 +107,7 @@ export const SplitImageCardBlockComponent: React.FC<
                 ) : (
                   <p
                     onClick={() => setEditMode("title")}
-                    className="font-bold text-lg text-gray-900 cursor-pointer hover:text-valasys-orange p-2 rounded hover:bg-orange-50"
+                    className="font-bold text-lg text-gray-900 cursor-pointer p-2 rounded"
                   >
                     {block.title}
                   </p>
