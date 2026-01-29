@@ -24,7 +24,7 @@ export const CenteredImageCardBlockComponent: React.FC<
   onAddBlock,
   onDuplicate,
   onDelete,
-  blockIndex = 0
+  blockIndex = 0,
 }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
 
@@ -46,7 +46,11 @@ export const CenteredImageCardBlockComponent: React.FC<
     onBlockUpdate({ ...block, [field]: value });
   };
 
-  const SectionToolbar = ({ sectionType }: { sectionType: "image" | "title" | "description" | "buttonText" }) => {
+  const SectionToolbar = ({
+    sectionType,
+  }: {
+    sectionType: "image" | "title" | "description" | "buttonText";
+  }) => {
     const handleCopy = () => {
       let contentToCopy = "";
       if (sectionType === "title") contentToCopy = block.title;
@@ -58,18 +62,21 @@ export const CenteredImageCardBlockComponent: React.FC<
         try {
           // Use the modern clipboard API
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(contentToCopy).then(() => {
-              console.log("Copied successfully:", contentToCopy);
-            }).catch((err) => {
-              console.error("Failed to copy:", err);
-              // Fallback to older method
-              const textArea = document.createElement("textarea");
-              textArea.value = contentToCopy;
-              document.body.appendChild(textArea);
-              textArea.select();
-              document.execCommand("copy");
-              document.body.removeChild(textArea);
-            });
+            navigator.clipboard
+              .writeText(contentToCopy)
+              .then(() => {
+                console.log("Copied successfully:", contentToCopy);
+              })
+              .catch((err) => {
+                console.error("Failed to copy:", err);
+                // Fallback to older method
+                const textArea = document.createElement("textarea");
+                textArea.value = contentToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+              });
           } else {
             // Fallback for older browsers
             const textArea = document.createElement("textarea");
@@ -111,7 +118,10 @@ export const CenteredImageCardBlockComponent: React.FC<
     };
 
     return (
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit" onMouseDown={(e) => e.preventDefault()}>
+      <div
+        className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit"
+        onMouseDown={(e) => e.preventDefault()}
+      >
         {sectionType !== "image" && (
           <Button
             variant="ghost"
@@ -170,7 +180,9 @@ export const CenteredImageCardBlockComponent: React.FC<
       }}
     >
       <div className="w-full">
-        <div className={`relative group mb-6 ${editMode === "image" ? "border-2 border-dotted border-valasys-orange rounded-lg" : ""} hover:border-2 hover:border-dotted hover:border-valasys-orange transition-all rounded-lg`}>
+        <div
+          className={`relative group mb-6 ${editMode === "image" ? "border-2 border-dotted border-valasys-orange rounded-lg" : ""} hover:border-2 hover:border-dotted hover:border-valasys-orange transition-all rounded-lg`}
+        >
           {block.image ? (
             <>
               <img
@@ -179,7 +191,9 @@ export const CenteredImageCardBlockComponent: React.FC<
                 onClick={() => setEditMode("image")}
                 className="w-full h-auto rounded-lg cursor-pointer"
               />
-              <label className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded-lg ${editMode === "image" ? "pointer-events-none" : ""}`}>
+              <label
+                className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-40 opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded-lg ${editMode === "image" ? "pointer-events-none" : ""}`}
+              >
                 <Upload className="w-6 h-6 text-white" />
                 <input
                   type="file"
@@ -246,7 +260,9 @@ export const CenteredImageCardBlockComponent: React.FC<
                 {block.description}
               </p>
             )}
-            {editMode === "description" && <SectionToolbar sectionType="description" />}
+            {editMode === "description" && (
+              <SectionToolbar sectionType="description" />
+            )}
           </div>
 
           <div className="pt-2">
@@ -270,7 +286,9 @@ export const CenteredImageCardBlockComponent: React.FC<
                 </button>
               </div>
             )}
-            {editMode === "buttonText" && <SectionToolbar sectionType="buttonText" />}
+            {editMode === "buttonText" && (
+              <SectionToolbar sectionType="buttonText" />
+            )}
           </div>
 
           {editMode === "buttonLink" && (
