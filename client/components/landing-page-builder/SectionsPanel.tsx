@@ -404,15 +404,11 @@ export const SectionsPanel: React.FC<SectionsPanelProps> = ({
             <button
               key={template.id}
               onClick={() => handleSelectTemplate(template.id, template.blocks())}
-              className="group text-left"
+              className={`group text-left transition-all ${
+                selectedId === template.id ? '[&>div]:!border-gray-900' : '[&>div]:hover:border-dashed'
+              }`}
             >
-              <div className={`transition-all ${
-                selectedId === template.id
-                  ? 'border border-gray-900'
-                  : 'border border-gray-200 hover:border-dashed hover:border-gray-400'
-              }`}>
-                {template.preview}
-              </div>
+              {template.preview}
               <div className="mt-3">
                 <div className="font-semibold text-sm text-gray-900 group-hover:text-valasys-orange transition-colors">
                   {template.name}
