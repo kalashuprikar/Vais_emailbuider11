@@ -188,9 +188,14 @@ export const SplitImageCardBlockComponent: React.FC<
                 ) : (
                   <p
                     onClick={() => setEditMode("buttonLink")}
-                    className="text-xs text-gray-500 cursor-pointer p-2 rounded break-all"
+                    onMouseEnter={() => setIsHoveringButtonLink(true)}
+                    onMouseLeave={() => setIsHoveringButtonLink(false)}
+                    className="text-xs text-gray-500 cursor-pointer p-3 rounded break-all transition-all"
+                    style={{
+                      border: isHoveringButtonLink ? "2px dashed rgb(255, 106, 0)" : "none",
+                    }}
                   >
-                    {block.buttonLink || "No link set"}
+                    {block.buttonLink || "#"}
                   </p>
                 )}
               </div>
