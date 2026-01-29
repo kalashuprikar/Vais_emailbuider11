@@ -155,7 +155,6 @@ export const SplitImageCardBlockComponent: React.FC<
     return (
       <div
         className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit"
-        onMouseDown={(e) => e.preventDefault()}
       >
         {sectionType !== "image" && (
           <Button
@@ -163,8 +162,9 @@ export const SplitImageCardBlockComponent: React.FC<
             size="sm"
             className="h-7 w-7 p-0 hover:bg-gray-100"
             title="Add"
-            onMouseDown={(e) => {
+            onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               handleAdd();
             }}
           >
@@ -177,8 +177,9 @@ export const SplitImageCardBlockComponent: React.FC<
           size="sm"
           className="h-7 w-7 p-0 hover:bg-gray-100"
           title="Copy"
-          onMouseDown={(e) => {
+          onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             handleCopy();
           }}
         >
@@ -191,6 +192,7 @@ export const SplitImageCardBlockComponent: React.FC<
           className="h-7 w-7 p-0 hover:bg-red-100"
           title="Delete"
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             handleDelete();
           }}
