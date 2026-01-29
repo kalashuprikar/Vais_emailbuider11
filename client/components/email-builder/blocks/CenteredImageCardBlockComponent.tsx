@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CenteredImageCardBlock } from "../types";
 import { ContentBlock } from "../types";
 import { Upload, Edit2, Plus, Copy, Trash2 } from "lucide-react";
@@ -16,6 +16,14 @@ export const CenteredImageCardBlockComponent: React.FC<
   CenteredImageCardBlockComponentProps
 > = ({ block, isSelected, onBlockUpdate, blockIndex = 0 }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeHandle, setResizeHandle] = useState<string | null>(null);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [startWidth, setStartWidth] = useState(0);
+  const [startHeight, setStartHeight] = useState(0);
+  const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
