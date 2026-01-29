@@ -380,7 +380,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   onChange={(e) => handleFieldChange("title", e.target.value)}
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="text-center font-bold text-lg border border-solid border-valasys-orange focus:outline-none"
+                  className="text-center font-bold text-lg border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <h3
@@ -411,7 +411,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   }
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="w-full p-3 rounded text-sm text-gray-600 min-h-24 border border-solid border-valasys-orange focus:outline-none bg-white"
+                  className="w-full p-3 rounded text-sm text-gray-600 min-h-24 border border-valasys-orange focus:outline-none bg-white"
                 />
               ) : (
                 <p
@@ -444,7 +444,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   }
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="text-center border border-solid border-valasys-orange focus:outline-none"
+                  className="text-center border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <div className="flex justify-center">
@@ -478,7 +478,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   onBlur={() => setEditMode(null)}
                   autoFocus
                   placeholder="https://example.com"
-                  className="text-sm text-center border border-solid border-valasys-orange focus:outline-none"
+                  className="text-sm text-center border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <p
