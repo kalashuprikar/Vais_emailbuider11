@@ -14,7 +14,7 @@ interface SplitImageCardBlockComponentProps {
 
 export const SplitImageCardBlockComponent: React.FC<
   SplitImageCardBlockComponentProps
-> = ({ block, isSelected, onBlockUpdate }) => {
+> = ({ block, isSelected, onBlockUpdate, onBlockDelete }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isHoveringTitle, setIsHoveringTitle] = useState(false);
   const [isHoveringDescription, setIsHoveringDescription] = useState(false);
