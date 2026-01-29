@@ -105,7 +105,7 @@ export const SplitImageCardBlockComponent: React.FC<
                     onChange={(e) => handleFieldChange("title", e.target.value)}
                     onBlur={() => setEditMode(null)}
                     autoFocus
-                    className="font-bold text-lg"
+                    className="font-bold text-lg border-2 border-solid border-valasys-orange focus:outline-none"
                   />
                 ) : (
                   <p
