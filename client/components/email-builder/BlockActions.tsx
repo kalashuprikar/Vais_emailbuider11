@@ -189,7 +189,11 @@ export const BlockActions: React.FC<BlockActionsProps> = ({
         variant="ghost"
         size="sm"
         className="h-8 w-8 p-0 hover:bg-red-100"
-        onClick={onDelete}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onDelete();
+        }}
         title="Delete block"
       >
         <Trash2 className="w-4 h-4 text-red-600" />
