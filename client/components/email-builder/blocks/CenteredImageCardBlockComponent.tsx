@@ -23,6 +23,9 @@ export const CenteredImageCardBlockComponent: React.FC<
   const [startWidth, setStartWidth] = useState(0);
   const [startHeight, setStartHeight] = useState(0);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const [isHoveringTitle, setIsHoveringTitle] = useState(false);
+  const [isHoveringDescription, setIsHoveringDescription] = useState(false);
+  const [isHoveringButton, setIsHoveringButton] = useState(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
