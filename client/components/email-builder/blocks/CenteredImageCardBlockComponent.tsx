@@ -131,7 +131,7 @@ export const CenteredImageCardBlockComponent: React.FC<
       }}
     >
       <div className="w-full">
-        <div className="relative group mb-6">
+        <div className={`relative group mb-6 ${editMode === "image" ? "border-2 border-dotted border-valasys-orange rounded-lg" : ""} hover:border-2 hover:border-dotted hover:border-valasys-orange transition-all rounded-lg`}>
           {block.image ? (
             <>
               <img
