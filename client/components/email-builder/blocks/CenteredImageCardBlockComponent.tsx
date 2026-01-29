@@ -18,9 +18,6 @@ export const CenteredImageCardBlockComponent: React.FC<
   block,
   isSelected,
   onBlockUpdate,
-  onAddBlock,
-  onDuplicate,
-  onDelete,
   blockIndex = 0,
 }) => {
   const [editMode, setEditMode] = useState<string | null>(null);
