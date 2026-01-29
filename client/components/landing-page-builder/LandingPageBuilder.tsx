@@ -246,6 +246,7 @@ export const LandingPageBuilder: React.FC<LandingPageBuilderProps> = ({
               onUpdateBlock={handleUpdateBlock}
               onDeleteBlock={handleDeleteBlock}
               onMoveBlock={handleMoveBlock}
+              onDuplicateBlock={handleDuplicateBlock}
             />
           </div>
         </div>
