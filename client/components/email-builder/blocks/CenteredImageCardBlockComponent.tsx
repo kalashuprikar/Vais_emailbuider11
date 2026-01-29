@@ -300,8 +300,8 @@ export const CenteredImageCardBlockComponent: React.FC<
                         onMouseDown={(e) => handleResizeStart(e, handle.pos)}
                         style={{
                           position: "absolute",
-                          width: handle.pos.length === 2 ? "12px" : handle.pos === "n" || handle.pos === "s" ? "30px" : "12px",
-                          height: handle.pos.length === 2 ? "12px" : handle.pos === "n" || handle.pos === "s" ? "8px" : "30px",
+                          width: "12px",
+                          height: "12px",
                           backgroundColor: "#FF6B35",
                           border: "2px solid white",
                           borderRadius: "2px",
@@ -311,7 +311,6 @@ export const CenteredImageCardBlockComponent: React.FC<
                           ...((handle as any).bottom && { bottom: handle.bottom }),
                           ...((handle as any).left && { left: handle.left }),
                           ...((handle as any).right && { right: handle.right }),
-                          ...((handle as any).transform && { transform: handle.transform }),
                         }}
                         title={`Drag to resize (${handle.pos})`}
                       />
