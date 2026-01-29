@@ -387,7 +387,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   onChange={(e) => handleFieldChange("title", e.target.value)}
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="text-center font-bold text-lg border-2 border-solid border-valasys-orange focus:outline-none"
+                  className="text-center font-bold text-lg border border-solid border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <h3
@@ -397,7 +397,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   className="font-bold text-xl text-gray-900 cursor-pointer transition-all p-3 rounded"
                   style={{
                     border: isHoveringTitle
-                      ? "2px dashed rgb(255, 106, 0)"
+                      ? "1px dashed rgb(255, 106, 0)"
                       : "none",
                   }}
                 >
@@ -418,7 +418,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   }
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="w-full p-3 rounded text-sm text-gray-600 min-h-24 border-2 border-dashed border-valasys-orange focus:outline-none bg-white"
+                  className="w-full p-3 rounded text-sm text-gray-600 min-h-24 border border-solid border-valasys-orange focus:outline-none bg-white"
                 />
               ) : (
                 <p
@@ -428,7 +428,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   className="text-sm text-gray-600 cursor-pointer transition-all p-3 rounded whitespace-pre-wrap break-words"
                   style={{
                     border: isHoveringDescription
-                      ? "2px dashed rgb(255, 106, 0)"
+                      ? "1px dashed rgb(255, 106, 0)"
                       : "none",
                   }}
                 >
@@ -451,7 +451,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   }
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="text-center border-2 border-solid border-valasys-orange focus:outline-none"
+                  className="text-center border border-solid border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <div className="flex justify-center">
@@ -461,7 +461,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                     onMouseLeave={() => setIsHoveringButton(false)}
                     className="inline-block py-2 px-6 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer transition-all"
                     style={{
-                      border: isHoveringButton ? "2px dashed white" : "none",
+                      border: isHoveringButton ? "1px dashed white" : "none",
                     }}
                   >
                     {block.buttonText}
@@ -485,7 +485,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   onBlur={() => setEditMode(null)}
                   autoFocus
                   placeholder="https://example.com"
-                  className="text-sm text-center border-2 border-solid border-valasys-orange focus:outline-none"
+                  className="text-sm text-center border border-solid border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <p
@@ -495,7 +495,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   className="text-xs text-gray-500 cursor-pointer p-3 rounded break-all transition-all"
                   style={{
                     border: isHoveringButtonLink
-                      ? "2px dashed rgb(255, 106, 0)"
+                      ? "1px dashed rgb(255, 106, 0)"
                       : "none",
                   }}
                 >
