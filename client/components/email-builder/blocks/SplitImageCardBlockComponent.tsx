@@ -67,21 +67,20 @@ export const SplitImageCardBlockComponent: React.FC<
     sectionType: "image" | "title" | "description" | "buttonText" | "buttonLink";
   }) => {
     const handleCopy = () => {
-      if (sectionType === "title") {
-        // Duplicate title by adding a line break and repeating it
-        const newTitle = block.title + "\n" + block.title;
-        onBlockUpdate({ ...block, title: newTitle });
-      } else if (sectionType === "description") {
-        // Duplicate description by adding a line break and repeating it
-        const newDescription = block.description + "\n" + block.description;
-        onBlockUpdate({ ...block, description: newDescription });
-      } else if (sectionType === "buttonText") {
-        // Duplicate button text
-        const newButtonText = block.buttonText + " " + block.buttonText;
-        onBlockUpdate({ ...block, buttonText: newButtonText });
-      } else if (sectionType === "buttonLink") {
-        // For link, just copy to clipboard since duplicating a link doesn't make sense
-        try {
+      try {
+        if (sectionType === "title") {
+          const newTitle = block.title + "\n" + block.title;
+          onBlockUpdate({ ...block, title: newTitle });
+          alert("Title duplicated!");
+        } else if (sectionType === "description") {
+          const newDescription = block.description + "\n" + block.description;
+          onBlockUpdate({ ...block, description: newDescription });
+          alert("Description duplicated!");
+        } else if (sectionType === "buttonText") {
+          const newButtonText = block.buttonText + " " + block.buttonText;
+          onBlockUpdate({ ...block, buttonText: newButtonText });
+          alert("Button text duplicated!");
+        } else if (sectionType === "buttonLink") {
           const textArea = document.createElement("textarea");
           textArea.value = block.buttonLink;
           textArea.style.position = "fixed";
@@ -91,12 +90,8 @@ export const SplitImageCardBlockComponent: React.FC<
           textArea.select();
           document.execCommand("copy");
           document.body.removeChild(textArea);
-        } catch (err) {
-          console.error("Copy failed:", err);
-        }
-      } else if (sectionType === "image") {
-        // For image, copy URL to clipboard
-        try {
+          alert("Link copied to clipboard!");
+        } else if (sectionType === "image") {
           const textArea = document.createElement("textarea");
           textArea.value = block.image;
           textArea.style.position = "fixed";
@@ -106,9 +101,11 @@ export const SplitImageCardBlockComponent: React.FC<
           textArea.select();
           document.execCommand("copy");
           document.body.removeChild(textArea);
-        } catch (err) {
-          console.error("Copy failed:", err);
+          alert("Image URL copied to clipboard!");
         }
+      } catch (err) {
+        console.error("Copy failed:", err);
+        alert("Copy failed, please try again");
       }
     };
 
