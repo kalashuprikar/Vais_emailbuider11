@@ -445,7 +445,7 @@ export const CenteredImageCardBlockComponent: React.FC<
                   }
                   onBlur={() => setEditMode(null)}
                   autoFocus
-                  className="text-center"
+                  className="text-center border-2 border-solid border-valasys-orange focus:outline-none"
                 />
               ) : (
                 <div className="flex justify-center">
