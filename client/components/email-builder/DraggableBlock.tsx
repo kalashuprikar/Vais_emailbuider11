@@ -100,15 +100,11 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({
       {isSelected && (
         <div className="px-4 py-2">
           <BlockActions
-            blockId={block.id}
+            block={block}
             blockIndex={index}
             totalBlocks={totalBlocks}
-            onAddBlock={(newBlock, position) => {
-              onAddBlock(newBlock, position);
-            }}
-            onDuplicate={(_, position) => {
-              onDuplicate(block, position);
-            }}
+            onAddBlock={onAddBlock}
+            onDuplicate={onDuplicate}
             onDelete={() => onDelete(block.id)}
           />
         </div>
