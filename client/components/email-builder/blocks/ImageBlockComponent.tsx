@@ -146,11 +146,20 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
                   const currentSrc = imgElement.src;
 
                   // Retry with CORS proxy if not already attempted
-                  if (!currentSrc.includes("cors-anywhere") && !currentSrc.includes("corsproxy")) {
-                    console.warn("⚠️ Image blocked by CORS. Retrying with proxy...", block.src);
+                  if (
+                    !currentSrc.includes("cors-anywhere") &&
+                    !currentSrc.includes("corsproxy")
+                  ) {
+                    console.warn(
+                      "⚠️ Image blocked by CORS. Retrying with proxy...",
+                      block.src,
+                    );
                     imgElement.src = `https://cors-anywhere.herokuapp.com/${block.src}`;
                     imgElement.onerror = () => {
-                      console.error("Image failed to load even with CORS proxy:", block.src);
+                      console.error(
+                        "Image failed to load even with CORS proxy:",
+                        block.src,
+                      );
                       imgElement.style.border = "2px solid red";
                       imgElement.style.opacity = "0.5";
                     };
@@ -180,11 +189,20 @@ export const ImageBlockComponent: React.FC<ImageBlockComponentProps> = ({
                 const currentSrc = imgElement.src;
 
                 // Retry with CORS proxy if not already attempted
-                if (!currentSrc.includes("cors-anywhere") && !currentSrc.includes("corsproxy")) {
-                  console.warn("⚠️ Image blocked by CORS. Retrying with proxy...", block.src);
+                if (
+                  !currentSrc.includes("cors-anywhere") &&
+                  !currentSrc.includes("corsproxy")
+                ) {
+                  console.warn(
+                    "⚠️ Image blocked by CORS. Retrying with proxy...",
+                    block.src,
+                  );
                   imgElement.src = `https://cors-anywhere.herokuapp.com/${block.src}`;
                   imgElement.onerror = () => {
-                    console.error("Image failed to load even with CORS proxy:", block.src);
+                    console.error(
+                      "Image failed to load even with CORS proxy:",
+                      block.src,
+                    );
                     imgElement.style.border = "2px solid red";
                     imgElement.style.opacity = "0.5";
                   };

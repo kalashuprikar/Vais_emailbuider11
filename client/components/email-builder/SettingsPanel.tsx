@@ -1447,8 +1447,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       const currentSrc = imgElement.src;
 
                       // Check if this is the original URL or already a proxy attempt
-                      if (!currentSrc.includes("cors-anywhere") && !currentSrc.includes("corsproxy")) {
-                        console.warn("⚠️ Image blocked by CORS. Retrying with CORS proxy...", (block as any).src);
+                      if (
+                        !currentSrc.includes("cors-anywhere") &&
+                        !currentSrc.includes("corsproxy")
+                      ) {
+                        console.warn(
+                          "⚠️ Image blocked by CORS. Retrying with CORS proxy...",
+                          (block as any).src,
+                        );
                         // Try with CORS proxy
                         imgElement.src = `https://cors-anywhere.herokuapp.com/${(block as any).src}`;
 
@@ -1519,7 +1525,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 </Button>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                ⚠️ External URLs may not load due to CORS restrictions. Use file upload for reliable image hosting.
+                ⚠️ External URLs may not load due to CORS restrictions. Use file
+                upload for reliable image hosting.
               </p>
             </div>
 
