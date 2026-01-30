@@ -521,13 +521,6 @@ export const CenteredImageCardBlockComponent: React.FC<
                       >
                         {title.content}
                       </h3>
-                      {editMode === `title-${title.id}` && (
-                        <SectionToolbar
-                          onAdd={handleAddTitle}
-                          onCopy={() => handleDuplicateTitle(title.id)}
-                          onDelete={() => handleDeleteTitle(title.id)}
-                        />
-                      )}
                     </div>
                   )}
                 </div>
@@ -597,17 +590,6 @@ export const CenteredImageCardBlockComponent: React.FC<
                       >
                         {desc.content}
                       </p>
-                      {editMode === `description-${desc.id}` && (
-                        <SectionToolbar
-                          onAdd={handleAddDescription}
-                          onCopy={() =>
-                            handleDuplicateDescription(desc.id)
-                          }
-                          onDelete={() =>
-                            handleDeleteDescription(desc.id)
-                          }
-                        />
-                      )}
                     </div>
                   )}
                 </div>
@@ -692,15 +674,6 @@ export const CenteredImageCardBlockComponent: React.FC<
                       <div className="text-xs text-gray-500 mt-1">
                         Link: {btn.link || "#"}
                       </div>
-                      {editMode === `button-text-${btn.id}` || editMode === `button-link-${btn.id}` ? (
-                        <div className="flex justify-center">
-                          <SectionToolbar
-                            onAdd={handleAddButton}
-                            onCopy={() => handleDuplicateButton(btn.id)}
-                            onDelete={() => handleDeleteButton(btn.id)}
-                          />
-                        </div>
-                      ) : null}
                     </div>
                   )}
                 </div>
