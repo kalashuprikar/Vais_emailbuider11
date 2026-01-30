@@ -415,6 +415,10 @@ export interface TwoColumnCardBlock {
   id: string;
   cards: {
     id: string;
+    image?: string;
+    imageAlt?: string;
+    imageWidth?: number;
+    imageHeight?: number;
     title: string;
     description: string;
     backgroundColor: string;
