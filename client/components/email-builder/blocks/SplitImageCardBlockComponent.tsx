@@ -273,34 +273,34 @@ export const SplitImageCardBlockComponent: React.FC<
               {(block.title || editMode === "title") && (
                 <div>
                   {editMode === "title" ? (
-                    <Input
-                      value={block.title}
-                      onChange={(e) =>
-                        handleFieldChange("title", e.target.value)
-                      }
-                      onBlur={() => setTimeout(() => setEditMode(null), 200)}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      autoFocus
-                      className="font-bold text-lg focus:outline-none"
-                      style={{ border: "2px solid rgb(255, 106, 0)" }}
-                    />
-                  ) : (
                     <>
-                      <p
-                        onClick={() => setEditMode("title")}
-                        onMouseEnter={() => setIsHoveringTitle(true)}
-                        onMouseLeave={() => setIsHoveringTitle(false)}
-                        className="font-bold text-lg text-gray-900 cursor-pointer p-3 rounded transition-all"
-                        style={{
-                          border: isHoveringTitle
-                            ? "1px dashed rgb(255, 106, 0)"
-                            : "none",
-                        }}
-                      >
-                        {block.title}
-                      </p>
-                      {isHoveringTitle && <SectionToolbar sectionType="title" />}
+                      <Input
+                        value={block.title}
+                        onChange={(e) =>
+                          handleFieldChange("title", e.target.value)
+                        }
+                        onBlur={() => setTimeout(() => setEditMode(null), 200)}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        autoFocus
+                        className="font-bold text-lg focus:outline-none"
+                        style={{ border: "2px solid rgb(255, 106, 0)" }}
+                      />
+                      <SectionToolbar sectionType="title" />
                     </>
+                  ) : (
+                    <p
+                      onClick={() => setEditMode("title")}
+                      onMouseEnter={() => setIsHoveringTitle(true)}
+                      onMouseLeave={() => setIsHoveringTitle(false)}
+                      className="font-bold text-lg text-gray-900 cursor-pointer p-3 rounded transition-all"
+                      style={{
+                        border: isHoveringTitle
+                          ? "1px dashed rgb(255, 106, 0)"
+                          : "none",
+                      }}
+                    >
+                      {block.title}
+                    </p>
                   )}
                 </div>
               )}
