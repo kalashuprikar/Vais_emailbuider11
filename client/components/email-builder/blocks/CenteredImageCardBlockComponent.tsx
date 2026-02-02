@@ -374,6 +374,63 @@ export const CenteredImageCardBlockComponent: React.FC<
     );
   };
 
+  const FieldToolbar = ({
+    fieldId,
+    fieldValue,
+    onAddTitle,
+    onCopy,
+    onClear,
+  }: {
+    fieldId: string;
+    fieldValue: string;
+    onAddTitle: () => void;
+    onCopy: (value: string) => void;
+    onClear: (id: string) => void;
+  }) => {
+    return (
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Add"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddTitle();
+          }}
+        >
+          <Plus className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Copy"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(fieldValue);
+          }}
+        >
+          <Copy className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-red-100"
+          title="Delete"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear(fieldId);
+          }}
+        >
+          <Trash2 className="w-3 h-3 text-red-600" />
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div
       className="rounded-lg group transition-all"
