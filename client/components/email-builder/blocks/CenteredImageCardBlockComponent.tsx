@@ -314,6 +314,7 @@ export const CenteredImageCardBlockComponent: React.FC<
     const newButtons = buttons.filter((b) => b.id !== id);
     onBlockUpdate({ ...block, buttons: newButtons });
     setEditMode(null);
+    setFocusedSection(null);
   };
 
   const SectionToolbar = ({
