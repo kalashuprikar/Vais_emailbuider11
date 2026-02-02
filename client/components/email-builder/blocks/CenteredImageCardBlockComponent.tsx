@@ -667,9 +667,9 @@ export const CenteredImageCardBlockComponent: React.FC<
           )}
 
           {/* Descriptions Section */}
-          {descriptions.length > 0 && (
+          {descriptions.filter(d => d.content).length > 0 && (
             <div className="space-y-2">
-              {descriptions.map((desc) => (
+              {descriptions.filter(d => d.content).map((desc) => (
                 <div key={desc.id}>
                   {editMode === `description-${desc.id}` ? (
                     <>
