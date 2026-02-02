@@ -563,13 +563,18 @@ export const CenteredImageCardBlockComponent: React.FC<
                     >
                       <div className="flex items-center justify-between gap-2 group">
                         <h3
-                          onClick={() => setEditMode(`title-${title.id}`)}
+                          onClick={() => {
+                            setEditMode(`title-${title.id}`);
+                            setFocusedSection(`title-${title.id}`);
+                          }}
                           className="flex-1 font-bold text-xl text-gray-900 cursor-pointer transition-all p-3 rounded"
                           style={{
                             border:
-                              hoveredSection === `title-${title.id}`
+                              focusedSection === `title-${title.id}`
                                 ? "2px solid rgb(255, 106, 0)"
-                                : "2px dotted rgb(255, 106, 0)",
+                                : hoveredSection === `title-${title.id}`
+                                  ? "2px dotted rgb(255, 106, 0)"
+                                  : "2px dotted rgb(255, 106, 0)",
                           }}
                         >
                           {title.content}
