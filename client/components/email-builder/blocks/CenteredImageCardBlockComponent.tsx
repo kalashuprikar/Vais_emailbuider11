@@ -28,6 +28,7 @@ export const CenteredImageCardBlockComponent: React.FC<
   const [startHeight, setStartHeight] = useState(0);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize sections from old format or arrays
@@ -153,6 +154,10 @@ export const CenteredImageCardBlockComponent: React.FC<
     block,
     onBlockUpdate,
   ]);
+
+  const handleCopyText = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
 
   const handleAddTitle = () => {
     const newTitles = [...titles, { id: generateId(), content: "" }];
@@ -283,6 +288,20 @@ export const CenteredImageCardBlockComponent: React.FC<
     }
   };
 
+  const handleClearTitle = (id: string) => {
+    const newTitles = titles.map((t) =>
+      t.id === id ? { ...t, content: "" } : t,
+    );
+    onBlockUpdate({ ...block, titles: newTitles });
+  };
+
+  const handleClearDescription = (id: string) => {
+    const newDescriptions = descriptions.map((d) =>
+      d.id === id ? { ...d, content: "" } : d,
+    );
+    onBlockUpdate({ ...block, descriptions: newDescriptions });
+  };
+
   const handleDeleteTitle = (id: string) => {
     const newTitles = titles.filter((t) => t.id !== id);
     onBlockUpdate({ ...block, titles: newTitles });
@@ -351,6 +370,63 @@ export const CenteredImageCardBlockComponent: React.FC<
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
+          }}
+        >
+          <Trash2 className="w-3 h-3 text-red-600" />
+        </Button>
+      </div>
+    );
+  };
+
+  const FieldToolbar = ({
+    fieldId,
+    fieldValue,
+    onAddTitle,
+    onCopy,
+    onClear,
+  }: {
+    fieldId: string;
+    fieldValue: string;
+    onAddTitle: () => void;
+    onCopy: (value: string) => void;
+    onClear: (id: string) => void;
+  }) => {
+    return (
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Add"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddTitle();
+          }}
+        >
+          <Plus className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Copy"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(fieldValue);
+          }}
+        >
+          <Copy className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-red-100"
+          title="Delete"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear(fieldId);
           }}
         >
           <Trash2 className="w-3 h-3 text-red-600" />
@@ -560,48 +636,32 @@ export const CenteredImageCardBlockComponent: React.FC<
                       }
                       onMouseLeave={() => setHoveredSection(null)}
                     >
-                      <div className="flex items-center justify-between gap-2 group">
-                        <h3
-                          onClick={() => setEditMode(`title-${title.id}`)}
-                          className="flex-1 font-bold text-xl text-gray-900 cursor-pointer transition-all p-3 rounded"
-                          style={{
-                            border:
-                              hoveredSection === `title-${title.id}`
-                                ? "2px solid rgb(255, 106, 0)"
+                      <h3
+                        onClick={() => {
+                          setEditMode(`title-${title.id}`);
+                          setFocusedSection(`title-${title.id}`);
+                        }}
+                        className="flex-1 font-bold text-xl text-gray-900 cursor-pointer transition-all p-3 rounded"
+                        style={{
+                          border:
+                            focusedSection === `title-${title.id}`
+                              ? "2px solid rgb(255, 106, 0)"
+                              : hoveredSection === `title-${title.id}`
+                                ? "2px dotted rgb(255, 106, 0)"
                                 : "2px dotted rgb(255, 106, 0)",
-                          }}
-                        >
-                          {title.content}
-                        </h3>
-                        {hoveredSection === `title-${title.id}` && (
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 hover:bg-gray-100"
-                              title="Copy"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDuplicateTitle(title.id);
-                              }}
-                            >
-                              <Copy className="w-4 h-4 text-gray-700" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 hover:bg-red-100"
-                              title="Delete"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteTitle(title.id);
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4 text-red-600" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
+                        }}
+                      >
+                        {title.content}
+                      </h3>
+                      {focusedSection === `title-${title.id}` && (
+                        <FieldToolbar
+                          fieldId={title.id}
+                          fieldValue={title.content}
+                          onAddTitle={handleAddTitle}
+                          onCopy={handleCopyText}
+                          onClear={handleClearTitle}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
@@ -650,48 +710,32 @@ export const CenteredImageCardBlockComponent: React.FC<
                       }
                       onMouseLeave={() => setHoveredSection(null)}
                     >
-                      <div className="flex items-start justify-between gap-2 group">
-                        <p
-                          onClick={() => setEditMode(`description-${desc.id}`)}
-                          className="flex-1 text-sm text-gray-600 cursor-pointer transition-all p-3 rounded whitespace-pre-wrap break-words"
-                          style={{
-                            border:
-                              hoveredSection === `description-${desc.id}`
-                                ? "2px solid rgb(255, 106, 0)"
+                      <p
+                        onClick={() => {
+                          setEditMode(`description-${desc.id}`);
+                          setFocusedSection(`description-${desc.id}`);
+                        }}
+                        className="flex-1 text-sm text-gray-600 cursor-pointer transition-all p-3 rounded whitespace-pre-wrap break-words"
+                        style={{
+                          border:
+                            focusedSection === `description-${desc.id}`
+                              ? "2px solid rgb(255, 106, 0)"
+                              : hoveredSection === `description-${desc.id}`
+                                ? "2px dotted rgb(255, 106, 0)"
                                 : "2px dotted rgb(255, 106, 0)",
-                          }}
-                        >
-                          {desc.content}
-                        </p>
-                        {hoveredSection === `description-${desc.id}` && (
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-3 flex-shrink-0">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 hover:bg-gray-100"
-                              title="Copy"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDuplicateDescription(desc.id);
-                              }}
-                            >
-                              <Copy className="w-4 h-4 text-gray-700" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 hover:bg-red-100"
-                              title="Delete"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteDescription(desc.id);
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4 text-red-600" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
+                        }}
+                      >
+                        {desc.content}
+                      </p>
+                      {focusedSection === `description-${desc.id}` && (
+                        <FieldToolbar
+                          fieldId={desc.id}
+                          fieldValue={desc.content}
+                          onAddTitle={handleAddDescription}
+                          onCopy={handleCopyText}
+                          onClear={handleClearDescription}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
@@ -751,13 +795,18 @@ export const CenteredImageCardBlockComponent: React.FC<
                       <div className="flex justify-center items-center gap-2 group">
                         <div>
                           <button
-                            onClick={() => setEditMode(`button-text-${btn.id}`)}
+                            onClick={() => {
+                              setEditMode(`button-text-${btn.id}`);
+                              setFocusedSection(`button-${btn.id}`);
+                            }}
                             className="inline-block py-2 px-6 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer transition-all"
                             style={{
                               border:
-                                hoveredSection === `button-${btn.id}`
+                                focusedSection === `button-${btn.id}`
                                   ? "2px solid white"
-                                  : "2px dotted white",
+                                  : hoveredSection === `button-${btn.id}`
+                                    ? "2px dotted white"
+                                    : "2px dotted white",
                             }}
                           >
                             {btn.text}

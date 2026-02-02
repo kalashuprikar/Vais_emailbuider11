@@ -21,6 +21,7 @@ export const SplitImageCardBlockComponent: React.FC<
   const [editMode, setEditMode] = useState<string | null>(null);
   const [isHoveringImage, setIsHoveringImage] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [focusedSection, setFocusedSection] = useState<string | null>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeHandle, setResizeHandle] = useState<string | null>(null);
   const [startX, setStartX] = useState(0);
@@ -159,6 +160,24 @@ export const SplitImageCardBlockComponent: React.FC<
     block,
     onBlockUpdate,
   ]);
+
+  const handleCopyText = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const handleClearTitle = (id: string) => {
+    const newTitles = titles.map((t) =>
+      t.id === id ? { ...t, content: "" } : t,
+    );
+    onBlockUpdate({ ...block, titles: newTitles });
+  };
+
+  const handleClearDescription = (id: string) => {
+    const newDescriptions = descriptions.map((d) =>
+      d.id === id ? { ...d, content: "" } : d,
+    );
+    onBlockUpdate({ ...block, descriptions: newDescriptions });
+  };
 
   const handleAddTitle = () => {
     const newTitles = [...titles, { id: generateId(), content: "" }];
@@ -367,6 +386,63 @@ export const SplitImageCardBlockComponent: React.FC<
     );
   };
 
+  const FieldToolbar = ({
+    fieldId,
+    fieldValue,
+    onAddTitle,
+    onCopy,
+    onClear,
+  }: {
+    fieldId: string;
+    fieldValue: string;
+    onAddTitle: () => void;
+    onCopy: (value: string) => void;
+    onClear: (id: string) => void;
+  }) => {
+    return (
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Add"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddTitle();
+          }}
+        >
+          <Plus className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Copy"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(fieldValue);
+          }}
+        >
+          <Copy className="w-3 h-3 text-gray-700" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-red-100"
+          title="Delete"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear(fieldId);
+          }}
+        >
+          <Trash2 className="w-3 h-3 text-red-600" />
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div
       className="p-4 rounded-lg"
@@ -544,17 +620,31 @@ export const SplitImageCardBlockComponent: React.FC<
                           onMouseLeave={() => setHoveredSection(null)}
                         >
                           <p
-                            onClick={() => setEditMode(`title-${title.id}`)}
+                            onClick={() => {
+                              setEditMode(`title-${title.id}`);
+                              setFocusedSection(`title-${title.id}`);
+                            }}
                             className="font-bold text-lg text-gray-900 cursor-pointer p-3 rounded transition-all"
                             style={{
                               border:
-                                hoveredSection === `title-${title.id}`
-                                  ? "1px dashed rgb(255, 106, 0)"
-                                  : "none",
+                                focusedSection === `title-${title.id}`
+                                  ? "2px solid rgb(255, 106, 0)"
+                                  : hoveredSection === `title-${title.id}`
+                                    ? "2px dotted rgb(255, 106, 0)"
+                                    : "none",
                             }}
                           >
                             {title.content}
                           </p>
+                          {focusedSection === `title-${title.id}` && (
+                            <FieldToolbar
+                              fieldId={title.id}
+                              fieldValue={title.content}
+                              onAddTitle={handleAddTitle}
+                              onCopy={handleCopyText}
+                              onClear={handleClearTitle}
+                            />
+                          )}
                         </div>
                       )}
                     </div>
@@ -606,19 +696,31 @@ export const SplitImageCardBlockComponent: React.FC<
                           onMouseLeave={() => setHoveredSection(null)}
                         >
                           <p
-                            onClick={() =>
-                              setEditMode(`description-${desc.id}`)
-                            }
+                            onClick={() => {
+                              setEditMode(`description-${desc.id}`);
+                              setFocusedSection(`description-${desc.id}`);
+                            }}
                             className="text-sm text-gray-600 cursor-pointer p-3 rounded whitespace-pre-line transition-all"
                             style={{
                               border:
-                                hoveredSection === `description-${desc.id}`
-                                  ? "1px dashed rgb(255, 106, 0)"
-                                  : "none",
+                                focusedSection === `description-${desc.id}`
+                                  ? "2px solid rgb(255, 106, 0)"
+                                  : hoveredSection === `description-${desc.id}`
+                                    ? "2px dotted rgb(255, 106, 0)"
+                                    : "none",
                             }}
                           >
                             {desc.content}
                           </p>
+                          {focusedSection === `description-${desc.id}` && (
+                            <FieldToolbar
+                              fieldId={desc.id}
+                              fieldValue={desc.content}
+                              onAddTitle={handleAddDescription}
+                              onCopy={handleCopyText}
+                              onClear={handleClearDescription}
+                            />
+                          )}
                         </div>
                       )}
                     </div>
@@ -690,13 +792,18 @@ export const SplitImageCardBlockComponent: React.FC<
                           onMouseLeave={() => setHoveredSection(null)}
                         >
                           <button
-                            onClick={() => setEditMode(`button-text-${btn.id}`)}
+                            onClick={() => {
+                              setEditMode(`button-text-${btn.id}`);
+                              setFocusedSection(`button-${btn.id}`);
+                            }}
                             className="py-2 px-4 bg-valasys-orange text-white rounded text-sm font-bold hover:bg-orange-600 cursor-pointer transition-all"
                             style={{
                               border:
-                                hoveredSection === `button-${btn.id}`
-                                  ? "1px dashed white"
-                                  : "none",
+                                focusedSection === `button-${btn.id}`
+                                  ? "2px solid white"
+                                  : hoveredSection === `button-${btn.id}`
+                                    ? "2px dotted white"
+                                    : "none",
                             }}
                           >
                             {btn.text}
