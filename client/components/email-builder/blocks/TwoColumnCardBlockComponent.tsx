@@ -3,7 +3,6 @@ import { TwoColumnCardBlock } from "../types";
 import { Upload, Trash2, Plus, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
 
 // Helper function to copy text to clipboard with fallbacks
 const copyToClipboard = async (text: string): Promise<boolean> => {
