@@ -5921,14 +5921,40 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           src={selectedCard.image}
                           alt={selectedCard.imageAlt || "Card image"}
                           className="w-full h-32 object-cover"
+                          onError={(e) => {
+                            const imgElement = e.target as HTMLImageElement;
+                            imgElement.style.display = "none";
+                            const parent = imgElement.parentElement;
+                            if (parent) {
+                              const errorDiv = document.createElement("div");
+                              errorDiv.className =
+                                "w-full h-32 bg-gray-200 flex items-center justify-center text-center p-2";
+                              errorDiv.innerHTML =
+                                '<p style="font-size: 11px; color: #999;">Image failed to load</p>';
+                              parent.appendChild(errorDiv);
+                            }
+                          }}
                         />
                       </div>
                       <button
                         onClick={() => {
-                          handleCardUpdate("image", "");
-                          handleCardUpdate("imageAlt", "");
-                          handleCardUpdate("imageWidth", undefined);
-                          handleCardUpdate("imageHeight", undefined);
+                          // Batch all updates into a single state update
+                          const updatedCards = twoColBlock.cards.map(
+                            (card: any) =>
+                              card.id === selectedCardId
+                                ? {
+                                    ...card,
+                                    image: "",
+                                    imageAlt: "",
+                                    imageWidth: undefined,
+                                    imageHeight: undefined,
+                                  }
+                                : card,
+                          );
+                          onBlockUpdate({
+                            ...twoColBlock,
+                            cards: updatedCards,
+                          });
                         }}
                         className="w-full px-3 py-2 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                       >
@@ -5946,11 +5972,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                           if (file) {
                             const reader = new FileReader();
                             reader.onload = (event) => {
-                              handleCardUpdate(
-                                "image",
-                                event.target?.result as string,
+                              // Batch both image updates into a single state update
+                              const updatedCards = twoColBlock.cards.map(
+                                (card: any) =>
+                                  card.id === selectedCardId
+                                    ? {
+                                        ...card,
+                                        image: event.target?.result as string,
+                                        imageAlt: file.name,
+                                      }
+                                    : card,
                               );
-                              handleCardUpdate("imageAlt", file.name);
+                              onBlockUpdate({
+                                ...twoColBlock,
+                                cards: updatedCards,
+                              });
                             };
                             reader.readAsDataURL(file);
                           }
@@ -5959,6 +5995,21 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       />
                     </label>
                   )}
+                </div>
+
+                <div>
+                  <Label className="text-xs font-semibold text-gray-700 mb-2 block">
+                    Image URL
+                  </Label>
+                  <Input
+                    value={selectedCard.image || ""}
+                    onChange={(e) => handleCardUpdate("image", e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="text-xs focus:ring-valasys-orange focus:ring-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Paste an image URL or upload a file above
+                  </p>
                 </div>
 
                 <div>
@@ -5997,7 +6048,72 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
                 <div>
                   <h4 className="text-xs font-bold text-gray-900 mb-3">
-                    Styling
+                    Image Styling
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-2 block">
+                        Image Width
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          min="50"
+                          value={selectedCard.imageWidth || ""}
+                          onChange={(e) =>
+                            handleCardUpdate(
+                              "imageWidth",
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined,
+                            )
+                          }
+                          placeholder="Auto"
+                          className="flex-1 text-xs focus:ring-valasys-orange focus:ring-2"
+                        />
+                        <span className="px-2 py-1 text-sm text-gray-600">
+                          px
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty for auto
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label className="text-xs text-gray-700 mb-2 block">
+                        Image Height
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          min="50"
+                          value={selectedCard.imageHeight || ""}
+                          onChange={(e) =>
+                            handleCardUpdate(
+                              "imageHeight",
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined,
+                            )
+                          }
+                          placeholder="Auto"
+                          className="flex-1 text-xs focus:ring-valasys-orange focus:ring-2"
+                        />
+                        <span className="px-2 py-1 text-sm text-gray-600">
+                          px
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Leave empty for auto
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-bold text-gray-900 mb-3">
+                    Card Styling
                   </h4>
                   <div className="space-y-3">
                     <div>

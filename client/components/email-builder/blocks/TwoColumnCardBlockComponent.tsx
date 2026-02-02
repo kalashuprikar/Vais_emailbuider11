@@ -20,6 +20,8 @@ export const TwoColumnCardBlockComponent: React.FC<
   const [startY, setStartY] = useState(0);
   const [startWidth, setStartWidth] = useState(0);
   const [startHeight, setStartHeight] = useState(0);
+  const [editingField, setEditingField] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState("");
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -57,6 +59,44 @@ export const TwoColumnCardBlockComponent: React.FC<
         : card,
     );
     onUpdate({ ...block, cards: updatedCards });
+  };
+
+  const handleStartEditingField = (
+    cardId: string,
+    fieldName: "title" | "description",
+  ) => {
+    const card = block.cards.find((c) => c.id === cardId);
+    if (card) {
+      setEditingField(`${cardId}-${fieldName}`);
+      setEditingValue(card[fieldName]);
+    }
+  };
+
+  const handleSaveEdit = (
+    cardId: string,
+    fieldName: "title" | "description",
+  ) => {
+    if (editingField === `${cardId}-${fieldName}`) {
+      const updatedCards = block.cards.map((card) =>
+        card.id === cardId ? { ...card, [fieldName]: editingValue } : card,
+      );
+      onUpdate({ ...block, cards: updatedCards });
+      setEditingField(null);
+      setEditingValue("");
+    }
+  };
+
+  const handleKeyPress = (
+    e: React.KeyboardEvent,
+    cardId: string,
+    fieldName: "title" | "description",
+  ) => {
+    if (e.key === "Enter" && fieldName === "title") {
+      handleSaveEdit(cardId, fieldName);
+    } else if (e.key === "Escape") {
+      setEditingField(null);
+      setEditingValue("");
+    }
   };
 
   const handleResizeStart = (
@@ -185,68 +225,35 @@ export const TwoColumnCardBlockComponent: React.FC<
               {card.image ? (
                 <>
                   <div style={{ padding: "12px" }}>
-                    {card.imageLink ? (
-                      <a
-                        href={
-                          card.imageLinkType === "email"
-                            ? `mailto:${card.imageLink}`
-                            : card.imageLink.startsWith("http")
-                              ? card.imageLink
-                              : `https://${card.imageLink}`
+                    <img
+                      src={card.image}
+                      alt={card.imageAlt || "Card image"}
+                      onError={(e) => {
+                        const imgElement = e.target as HTMLImageElement;
+                        imgElement.style.display = "none";
+                        const parent = imgElement.parentElement;
+                        if (parent) {
+                          const errorDiv = document.createElement("div");
+                          errorDiv.className =
+                            "w-full h-40 bg-gray-200 flex items-center justify-center text-center p-4";
+                          errorDiv.innerHTML =
+                            '<p style="font-size: 12px; color: #666;">Image failed to load. Check the URL or upload the image directly.</p>';
+                          parent.appendChild(errorDiv);
                         }
-                        target={
-                          card.imageLinkType === "email" ? undefined : "_blank"
-                        }
-                        rel={
-                          card.imageLinkType === "email"
-                            ? undefined
-                            : "noopener noreferrer"
-                        }
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        style={{
-                          textDecoration: "none",
-                          display: "block",
-                          width: "100%",
-                        }}
-                      >
-                        <img
-                          src={card.image}
-                          alt={card.imageAlt || "Card image"}
-                          style={{
-                            width: card.imageWidth
-                              ? `${card.imageWidth}px`
-                              : "100%",
-                            height: card.imageHeight
-                              ? `${card.imageHeight}px`
-                              : "auto",
-                            maxWidth: "100%",
-                            display: "block",
-                            objectFit: "cover",
-                            borderRadius: `${card.borderRadius}px`,
-                            cursor: "pointer",
-                          }}
-                        />
-                      </a>
-                    ) : (
-                      <img
-                        src={card.image}
-                        alt={card.imageAlt || "Card image"}
-                        style={{
-                          width: card.imageWidth
-                            ? `${card.imageWidth}px`
-                            : "100%",
-                          height: card.imageHeight
-                            ? `${card.imageHeight}px`
-                            : "auto",
-                          maxWidth: "100%",
-                          display: "block",
-                          objectFit: "cover",
-                          borderRadius: `${card.borderRadius}px`,
-                        }}
-                      />
-                    )}
+                      }}
+                      style={{
+                        width: card.imageWidth
+                          ? `${card.imageWidth}px`
+                          : "100%",
+                        height: card.imageHeight
+                          ? `${card.imageHeight}px`
+                          : "auto",
+                        maxWidth: "100%",
+                        display: "block",
+                        objectFit: "cover",
+                        borderRadius: `${card.borderRadius}px`,
+                      }}
+                    />
                   </div>
                 </>
               ) : (
@@ -274,8 +281,61 @@ export const TwoColumnCardBlockComponent: React.FC<
                 border: "none",
               }}
             >
-              <h3 className="font-bold text-base mb-2 m-0">{card.title}</h3>
-              <p className="text-xs leading-snug m-0">{card.description}</p>
+              {editingField === `${card.id}-title` ? (
+                <input
+                  type="text"
+                  autoFocus
+                  value={editingValue}
+                  onChange={(e) => setEditingValue(e.target.value)}
+                  onBlur={() => handleSaveEdit(card.id, "title")}
+                  onKeyPress={(e) => handleKeyPress(e, card.id, "title")}
+                  className="w-full font-bold text-base mb-2 m-0 p-1 border border-valasys-orange rounded"
+                  style={{
+                    color: card.textColor,
+                    backgroundColor: "transparent",
+                  }}
+                />
+              ) : (
+                <h3
+                  className="font-bold text-base mb-2 m-0 cursor-pointer hover:opacity-70"
+                  onDoubleClick={() =>
+                    handleStartEditingField(card.id, "title")
+                  }
+                  title="Double-click to edit"
+                >
+                  {card.title}
+                </h3>
+              )}
+              {editingField === `${card.id}-description` ? (
+                <textarea
+                  autoFocus
+                  value={editingValue}
+                  onChange={(e) => setEditingValue(e.target.value)}
+                  onBlur={() => handleSaveEdit(card.id, "description")}
+                  onKeyPress={(e) => {
+                    if (e.key === "Escape") {
+                      setEditingField(null);
+                      setEditingValue("");
+                    }
+                  }}
+                  className="w-full text-xs leading-snug m-0 p-1 border border-valasys-orange rounded"
+                  style={{
+                    color: card.textColor,
+                    backgroundColor: "transparent",
+                  }}
+                  rows={3}
+                />
+              ) : (
+                <p
+                  className="text-xs leading-snug m-0 cursor-pointer hover:opacity-70"
+                  onDoubleClick={() =>
+                    handleStartEditingField(card.id, "description")
+                  }
+                  title="Double-click to edit"
+                >
+                  {card.description}
+                </p>
+              )}
             </div>
           </div>
         ))}
