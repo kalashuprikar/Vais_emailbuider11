@@ -3,6 +3,39 @@ import { TwoColumnCardBlock } from "../types";
 import { Upload, Trash2, Plus, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+
+// Helper function to copy text to clipboard with fallbacks
+const copyToClipboard = async (text: string): Promise<boolean> => {
+  try {
+    // Modern Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } else {
+      // Fallback: use textarea method for older browsers or non-secure contexts
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const success = document.execCommand("copy");
+      document.body.removeChild(textArea);
+
+      if (!success) {
+        throw new Error("execCommand copy failed");
+      }
+      return true;
+    }
+  } catch (error) {
+    console.error("Clipboard copy failed:", error);
+    return false;
+  }
+};
 
 interface TwoColumnCardBlockComponentProps {
   block: TwoColumnCardBlock;
@@ -116,32 +149,40 @@ export const TwoColumnCardBlockComponent: React.FC<
     }
   };
 
-  const handleCopyStyledTitle = (text: string) => {
-    const styledContent = `<h3 style="font-weight: 700; font-size: 16px; border: 2px solid rgb(255, 106, 0); padding: 8px; border-radius: 4px; margin: 0;">${text}</h3>`;
-    navigator.clipboard
-      .write([
-        new ClipboardItem({
-          "text/html": new Blob([styledContent], { type: "text/html" }),
-          "text/plain": new Blob([text], { type: "text/plain" }),
-        }),
-      ])
-      .catch(() => {
-        navigator.clipboard.writeText(text);
+  const handleCopyStyledTitle = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      toast({
+        title: "Copied!",
+        description: "Title copied to clipboard",
+        duration: 2000,
       });
+    } else {
+      toast({
+        title: "Copy Failed",
+        description: "Could not copy to clipboard",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
   };
 
-  const handleCopyStyledDescription = (text: string) => {
-    const styledContent = `<p style="font-size: 12px; border: 2px solid rgb(255, 106, 0); padding: 8px; border-radius: 4px; margin: 0; line-height: 1.4;">${text}</p>`;
-    navigator.clipboard
-      .write([
-        new ClipboardItem({
-          "text/html": new Blob([styledContent], { type: "text/html" }),
-          "text/plain": new Blob([text], { type: "text/plain" }),
-        }),
-      ])
-      .catch(() => {
-        navigator.clipboard.writeText(text);
+  const handleCopyStyledDescription = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      toast({
+        title: "Copied!",
+        description: "Description copied to clipboard",
+        duration: 2000,
       });
+    } else {
+      toast({
+        title: "Copy Failed",
+        description: "Could not copy to clipboard",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
   };
 
   const handleDeleteCard = (cardId: string) => {

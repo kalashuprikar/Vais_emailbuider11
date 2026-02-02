@@ -4,6 +4,7 @@ import { ContentBlock } from "../types";
 import { Upload, Edit2, Copy, Trash2, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 interface CenteredImageCardBlockComponentProps {
   block: CenteredImageCardBlock;
@@ -15,6 +16,38 @@ interface CenteredImageCardBlockComponentProps {
 // Helper to generate unique IDs
 const generateId = () =>
   `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+// Helper function to copy text to clipboard with fallbacks
+const copyToClipboard = async (text: string): Promise<boolean> => {
+  try {
+    // Modern Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } else {
+      // Fallback: use textarea method for older browsers or non-secure contexts
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      const success = document.execCommand("copy");
+      document.body.removeChild(textArea);
+
+      if (!success) {
+        throw new Error("execCommand copy failed");
+      }
+      return true;
+    }
+  } catch (error) {
+    console.error("Clipboard copy failed:", error);
+    return false;
+  }
+};
 
 export const CenteredImageCardBlockComponent: React.FC<
   CenteredImageCardBlockComponentProps
@@ -155,8 +188,22 @@ export const CenteredImageCardBlockComponent: React.FC<
     onBlockUpdate,
   ]);
 
-  const handleCopyText = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const handleCopyText = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      toast({
+        title: "Copied!",
+        description: "Text copied to clipboard",
+        duration: 2000,
+      });
+    } else {
+      toast({
+        title: "Copy Failed",
+        description: "Could not copy to clipboard",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
   };
 
   const handleAddTitle = () => {
@@ -201,7 +248,7 @@ export const CenteredImageCardBlockComponent: React.FC<
     onBlockUpdate({ ...block, buttons: newButtons });
   };
 
-  const handleDuplicateTitle = (id: string) => {
+  const handleDuplicateTitle = async (id: string) => {
     const titleToDuplicate = titles.find((t) => t.id === id);
     if (titleToDuplicate) {
       const newTitles = [...titles];
@@ -212,24 +259,26 @@ export const CenteredImageCardBlockComponent: React.FC<
       });
       onBlockUpdate({ ...block, titles: newTitles });
 
-      // Copy to clipboard with complete styling
-      const styledContent = `<h2 style="font-weight: 700; font-size: 20px; color: rgb(17, 24, 39); text-align: center; margin: 0; padding: 12px; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5;">${titleToDuplicate.content}</h2>`;
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            "text/html": new Blob([styledContent], { type: "text/html" }),
-            "text/plain": new Blob([titleToDuplicate.content], {
-              type: "text/plain",
-            }),
-          }),
-        ])
-        .catch(() => {
-          navigator.clipboard.writeText(titleToDuplicate.content);
+      // Copy to clipboard
+      const success = await copyToClipboard(titleToDuplicate.content);
+      if (success) {
+        toast({
+          title: "Copied!",
+          description: "Title copied to clipboard",
+          duration: 2000,
         });
+      } else {
+        toast({
+          title: "Copy Failed",
+          description: "Could not copy to clipboard",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
     }
   };
 
-  const handleDuplicateDescription = (id: string) => {
+  const handleDuplicateDescription = async (id: string) => {
     const descToDuplicate = descriptions.find((d) => d.id === id);
     if (descToDuplicate) {
       const newDescriptions = [...descriptions];
@@ -240,24 +289,26 @@ export const CenteredImageCardBlockComponent: React.FC<
       });
       onBlockUpdate({ ...block, descriptions: newDescriptions });
 
-      // Copy to clipboard with complete styling
-      const styledContent = `<p style="font-size: 14px; color: rgb(75, 85, 99); text-align: center; white-space: pre-wrap; margin: 0; padding: 12px; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; letter-spacing: 0.3px;">${descToDuplicate.content}</p>`;
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            "text/html": new Blob([styledContent], { type: "text/html" }),
-            "text/plain": new Blob([descToDuplicate.content], {
-              type: "text/plain",
-            }),
-          }),
-        ])
-        .catch(() => {
-          navigator.clipboard.writeText(descToDuplicate.content);
+      // Copy to clipboard
+      const success = await copyToClipboard(descToDuplicate.content);
+      if (success) {
+        toast({
+          title: "Copied!",
+          description: "Description copied to clipboard",
+          duration: 2000,
         });
+      } else {
+        toast({
+          title: "Copy Failed",
+          description: "Could not copy to clipboard",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
     }
   };
 
-  const handleDuplicateButton = (id: string) => {
+  const handleDuplicateButton = async (id: string) => {
     const buttonToDuplicate = buttons.find((b) => b.id === id);
     if (buttonToDuplicate) {
       const newButtons = [...buttons];
@@ -268,23 +319,23 @@ export const CenteredImageCardBlockComponent: React.FC<
       });
       onBlockUpdate({ ...block, buttons: newButtons });
 
-      // Copy to clipboard with complete styling
-      const styledContent = `<a href="${buttonToDuplicate.link}" style="display: inline-block; padding: 10px 24px; background-color: rgb(255, 106, 0); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border: none; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(255, 106, 0, 0.2);">${buttonToDuplicate.text}</a>`;
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            "text/html": new Blob([styledContent], { type: "text/html" }),
-            "text/plain": new Blob(
-              [`${buttonToDuplicate.text} (${buttonToDuplicate.link})`],
-              { type: "text/plain" },
-            ),
-          }),
-        ])
-        .catch(() => {
-          navigator.clipboard.writeText(
-            `${buttonToDuplicate.text} (${buttonToDuplicate.link})`,
-          );
+      // Copy to clipboard
+      const buttonText = `${buttonToDuplicate.text} (${buttonToDuplicate.link})`;
+      const success = await copyToClipboard(buttonText);
+      if (success) {
+        toast({
+          title: "Copied!",
+          description: "Button copied to clipboard",
+          duration: 2000,
         });
+      } else {
+        toast({
+          title: "Copy Failed",
+          description: "Could not copy to clipboard",
+          variant: "destructive",
+          duration: 2000,
+        });
+      }
     }
   };
 
