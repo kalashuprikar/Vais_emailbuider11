@@ -221,10 +221,18 @@ export const TwoColumnCardBlockComponent: React.FC<
           variant="ghost"
           size="sm"
           className="h-7 w-7 p-0 hover:bg-gray-100"
-          title="Duplicate card"
+          title="Duplicate content"
           onClick={(e) => {
             e.stopPropagation();
-            handleDuplicateCard(cardId);
+            const updatedCards = block.cards.map((card) =>
+              card.id === cardId
+                ? {
+                    ...card,
+                    [fieldName]: `${card[fieldName]}\n${fieldValue}`,
+                  }
+                : card,
+            );
+            onUpdate({ ...block, cards: updatedCards });
           }}
         >
           <Copy className="w-3 h-3 text-gray-700" />
