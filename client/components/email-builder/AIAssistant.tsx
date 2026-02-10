@@ -3,10 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sparkles, Send, Bot, User, Loader2, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { Sparkles, Send, Bot, User, Loader2, Plus, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ContentBlock, EmailTemplate } from "./types";
-import { generateId, createTitleBlock, createTextBlock, createButtonBlock } from "./utils";
+import {
+  generateId,
+  createTitleBlock,
+  createTextBlock,
+  createButtonBlock,
+  createDividerBlock,
+  createImageBlock,
+  createSpacerBlock
+} from "./utils";
 
 interface AIAssistantProps {
   onAddBlock: (block: ContentBlock) => void;
@@ -19,7 +27,6 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   suggestions?: ContentBlock[];
-  isGenerating?: boolean;
 }
 
 export const AIAssistant: React.FC<AIAssistantProps> = ({
@@ -44,6 +51,29 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
     }
   }, [messages]);
 
+  // Helper to hydrate blocks from AI with defaults
+  const hydrateBlocks = (aiBlocks: any[]): ContentBlock[] => {
+    return aiBlocks.map(block => {
+      const id = generateId();
+      switch (block.type) {
+        case "title":
+          return { ...createTitleBlock(block.content), ...block, id };
+        case "text":
+          return { ...createTextBlock(block.content), ...block, id };
+        case "button":
+          return { ...createButtonBlock(block.text), ...block, id };
+        case "divider":
+          return { ...createDividerBlock(), ...block, id };
+        case "image":
+          return { ...createImageBlock(block.src), ...block, id };
+        case "spacer":
+          return { ...createSpacerBlock(block.height), ...block, id };
+        default:
+          return { ...block, id };
+      }
+    }) as ContentBlock[];
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isGenerating) return;
 
@@ -57,43 +87,41 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
     setInput("");
     setIsGenerating(true);
 
-    // Mock AI response for now
-    // In a real app, this would call /api/ai/email-template
-    setTimeout(() => {
-      let aiContent = "I've generated some blocks for you based on your request.";
-      let suggestions: ContentBlock[] = [];
+    try {
+      const response = await fetch("/api/ai/email-template", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: input }),
+      });
 
-      if (input.toLowerCase().includes("welcome")) {
-        aiContent = "Here's a welcome email structure for you:";
-        suggestions = [
-          createTitleBlock("Welcome to our Newsletter!"),
-          createTextBlock("We're so glad to have you with us. Stay tuned for exciting updates, tips, and exclusive offers."),
-          createButtonBlock("Get Started", "#"),
-        ];
-      } else if (input.toLowerCase().includes("product")) {
-        aiContent = "I've suggested a product section:";
-        suggestions = [
-          createTitleBlock("Featured Product"),
-          createTextBlock("Check out our latest addition to the collection. Built with quality and style in mind."),
-          createButtonBlock("Shop Now", "#"),
-        ];
-      } else {
-        suggestions = [
-          createTitleBlock("New Section"),
-          createTextBlock("Tell me more about what you want to add here."),
-        ];
+      if (!response.ok) {
+        throw new Error("Failed to generate content");
       }
+
+      const data = await response.json();
+      const blocks = hydrateBlocks(data.blocks || []);
 
       const aiMessage: Message = {
         id: generateId(),
         role: "assistant",
-        content: aiContent,
-        suggestions,
+        content: data.message,
+        suggestions: blocks,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("AI Generation Error:", error);
+      const errorMessage: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: "I'm sorry, I encountered an error while generating your content. Please try again.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsGenerating(false);
-    }, 1500);
+    }
   };
 
   const handleApplyAll = (blocks: ContentBlock[]) => {
