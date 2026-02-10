@@ -72,34 +72,105 @@ export const handleAIEmailTemplate: RequestHandler = (req, res) => {
         borderRadius: 8,
       }
     ];
-  } else if (promptLower.includes("newsletter") || promptLower.includes("update")) {
-    message = "I've created a monthly newsletter layout.";
+  } else if (promptLower.includes("newsletter") || promptLower.includes("build") || promptLower.includes("update")) {
+    message = "I've built a comprehensive newsletter template for you.";
     blocks = [
       {
-        type: "title",
+        type: "logo",
+        id: `ai-${Date.now()}-0`,
+        src: "",
+        alt: "Logo",
+        width: 150,
+        alignment: "center",
+        padding: 20,
+      },
+      {
+        type: "image",
         id: `ai-${Date.now()}-1`,
-        content: "Monthly Newsletter",
-        fontSize: 28,
-        fontColor: "#333333",
-        alignment: "left",
+        src: "https://cdn.builder.io/api/v1/image/assets%2Ff175eb92de704327bb52162c1cf84ff3%2Fecb6a5ee790e40ecb44aa7d9621b5985?format=webp&width=800",
+        alt: "Newsletter Header",
+        width: 100,
+        widthUnit: "%",
+        padding: 0,
+      },
+      {
+        type: "title",
+        id: `ai-${Date.now()}-2`,
+        content: "Monthly Insights & Updates",
+        fontSize: 32,
+        fontColor: "#1a1a1a",
+        alignment: "center",
         fontWeight: "bold",
-        padding: 15,
+        padding: 30,
       },
       {
         type: "text",
-        id: `ai-${Date.now()}-2`,
-        content: "Here are the top highlights from this month. We've been working hard on new features and improvements.",
-        fontSize: 14,
-        fontColor: "#666666",
+        id: `ai-${Date.now()}-3`,
+        content: "Welcome to this month's edition of our newsletter! We have some exciting news to share, including new feature launches and some great tips to help you get the most out of our platform.",
+        fontSize: 16,
+        fontColor: "#4a4a4a",
         alignment: "left",
-        padding: 15,
+        padding: 20,
       },
       {
         type: "divider",
-        id: `ai-${Date.now()}-3`,
+        id: `ai-${Date.now()}-4`,
         color: "#eeeeee",
         height: 1,
-        padding: 10,
+        margin: 20,
+      },
+      {
+        type: "title",
+        id: `ai-${Date.now()}-5`,
+        content: "Top Feature of the Month",
+        fontSize: 24,
+        fontColor: "#1a1a1a",
+        alignment: "left",
+        fontWeight: "bold",
+        padding: 20,
+      },
+      {
+        type: "text",
+        id: `ai-${Date.now()}-6`,
+        content: "Our new AI Assistant is now live! You can build beautiful newsletters in seconds just by describing what you want. It's designed to save you hours of manual work.",
+        fontSize: 14,
+        fontColor: "#666666",
+        alignment: "left",
+        padding: 20,
+      },
+      {
+        type: "button",
+        id: `ai-${Date.now()}-7`,
+        text: "Try It Now",
+        link: "https://example.com/ai",
+        backgroundColor: "#FF6A00",
+        textColor: "#ffffff",
+        alignment: "center",
+        padding: 20,
+        borderRadius: 8,
+      },
+      {
+        type: "spacer",
+        id: `ai-${Date.now()}-8`,
+        height: 40,
+      },
+      {
+        type: "footer-with-social",
+        id: `ai-${Date.now()}-9`,
+        social: {
+          platforms: [
+            { name: "Facebook", url: "#", icon: "facebook" },
+            { name: "Instagram", url: "#", icon: "instagram" },
+            { name: "LinkedIn", url: "#", icon: "linkedin" }
+          ],
+          size: "small",
+          alignment: "center",
+          spacing: 10,
+        },
+        enterpriseName: { content: "Valasys AI" },
+        address: { content: "123 Innovation Way, Tech City" },
+        subscriptionText: { content: "You're receiving this because you subscribed to our updates." },
+        unsubscribeLink: { text: "Unsubscribe", url: "#" }
       }
     ];
   } else if (promptLower.includes("product") || promptLower.includes("sale") || promptLower.includes("offer")) {
