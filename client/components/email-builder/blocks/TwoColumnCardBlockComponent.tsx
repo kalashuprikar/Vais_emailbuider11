@@ -11,11 +11,14 @@ interface TwoColumnCardBlockComponentProps {
   block: TwoColumnCardBlock;
   isSelected: boolean;
   onUpdate: (block: TwoColumnCardBlock) => void;
+  onDuplicate?: (block: TwoColumnCardBlock, position: number) => void;
+  onDelete?: (blockId: string) => void;
+  blockIndex?: number;
 }
 
 export const TwoColumnCardBlockComponent: React.FC<
   TwoColumnCardBlockComponentProps
-> = ({ block, isSelected, onUpdate }) => {
+> = ({ block, isSelected, onUpdate, onDuplicate, onDelete, blockIndex = 0 }) => {
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const [hoveredFieldId, setHoveredFieldId] = useState<string | null>(null);
   const [focusedFieldId, setFocusedFieldId] = useState<string | null>(null);
@@ -229,6 +232,16 @@ export const TwoColumnCardBlockComponent: React.FC<
     );
   };
 
+  const handleBlockDuplicate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDuplicate?.(block, blockIndex + 1);
+  };
+
+  const handleBlockDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete?.(block.id);
+  };
+
   const handleResizeStart = (
     e: React.MouseEvent,
     cardId: string,
@@ -324,14 +337,15 @@ export const TwoColumnCardBlockComponent: React.FC<
   ]);
 
   return (
-    <div
-      className={`w-full rounded-lg overflow-hidden ${
-        isSelected ? "ring-2 ring-valasys-orange" : ""
-      }`}
-      style={{
-        width: `${block.width}${block.widthUnit}`,
-      }}
-    >
+    <div>
+      <div
+        className={`w-full rounded-lg overflow-hidden ${
+          isSelected ? "ring-2 ring-valasys-orange" : ""
+        }`}
+        style={{
+          width: `${block.width}${block.widthUnit}`,
+        }}
+      >
       <div className="flex gap-5">
         {block.cards.map((card, index) => {
           const titles = useMemo(
@@ -590,6 +604,29 @@ export const TwoColumnCardBlockComponent: React.FC<
           );
         })}
       </div>
+    </div>
+    {isSelected && (
+      <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-2 shadow-sm mt-2 w-fit">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-gray-100"
+          title="Duplicate this block"
+          onClick={handleBlockDuplicate}
+        >
+          <Copy className="w-3 h-3 text-gray-700" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 w-7 p-0 hover:bg-red-100"
+          title="Delete this block"
+          onClick={handleBlockDelete}
+        >
+          <Trash2 className="w-3 h-3 text-red-600" />
+        </Button>
+      </div>
+    )}
     </div>
   );
 };
